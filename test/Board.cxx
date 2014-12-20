@@ -297,6 +297,49 @@ TEST_F(TestBoard, WhiteReturnsTrueForWhiteStartingPositions)
 
 
 //
+// Modify
+
+
+// void move(const Move& m);
+
+
+TEST_F(TestBoard, MoveThrowsInvalidArgumentIfMoveIsFromEmptySquare)
+{
+	const zebra::square from = 18;
+	zebra::Move mv(from, from - zebra::Rules::SLIDE_SHORT);
+	
+	ASSERT_THROW( start.move(mv), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, MoveThrowsInvalidArgumentIfMoveIsToOccupiedSquare)
+{
+	const zebra::square to = 23;
+	zebra::Move mv(to + zebra::Rules::SLIDE_SHORT, to);
+	
+	ASSERT_THROW( start.move(mv), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, MoveThrowsInvalidArgumentIfMoveIsJumpOverEmptySquare)
+{
+	const zebra::square from = 23;
+	zebra::Move mv(from, from - zebra::Rules::JUMP_SHORT);
+	
+	ASSERT_THROW( start.move(mv), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, MoveThrowsInvalidArgumentIfMoveIsJumpOverSameColour)
+{
+	const zebra::square from = 26;
+	zebra::Move mv(from, from - zebra::Rules::JUMP_SHORT);
+	
+	ASSERT_THROW( start.move(mv), std::invalid_argument );
+}
+
+
+//
 // Utilities
 
 

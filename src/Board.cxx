@@ -131,6 +131,53 @@ bool zebra::Board::white(const coord& x, const coord& y) const
 
 
 
+void zebra::Board::move(const Move& mv)
+{
+	const square jumped = mv.jumped();
+	const bool is_jump = (jumped != 0);
+	const bool is_white = this->white(mv.from());
+	const bool is_king = this->king(mv.from());
+	
+	if(
+		this->empty(mv.from())
+		||
+		this->occupied(mv.to())
+		||
+		( is_jump && this->empty(jumped) )
+		||
+		( is_jump && is_white == this->white(jumped) )
+		||
+		( is_king && is_white && (mv.from() < mv.to()) )
+		||
+		( is_king && ! is_white && (mv.from() > mv.to()) )
+		)
+	{
+		throw std::invalid_argument("Invalid move");
+	}
+	
+	std::bitset<Rules::BOARD_SQUARES>& player = is_white ? this->whites : this->blacks;
+	
+	player.reset( mv.from() - 1 );
+	player.set( mv.to() - 1 );
+	
+	if( is_king )
+	{
+		this->kings.reset( mv.from() - 1 );
+		this->kings.set( mv.from() - 1 );
+	}
+	
+	if( is_jump )
+	{
+		std::bitset<Rules::BOARD_SQUARES>& opponent = is_white ? this->blacks : this->whites;
+		const square jumped = mv.jumped();
+		
+		opponent.reset( jumped - 1 );
+		this->kings.reset( jumped - 1 );
+	}
+}
+
+
+
 std::pair<zebra::coord, zebra::coord> zebra::Board::getCoordinates(const square& s) const
 {
 	this->validateSquare(s);

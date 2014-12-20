@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <utility>
 
+#include "Move.hxx"
 #include "Rules.hxx"
 
 
@@ -121,9 +122,15 @@ class zebra::Board
 		
 		//
 		// Modify
-		//
-		//void move(const Move& m);
-		//
+		
+		
+		/// Applies a move to the board.
+		/// \throws std::invalid_argument If the move is not valid for the board.
+		/// This could be a move from an unoccupied square, a move to an occupied square, a jump over an unoccupied square,
+		/// a jump over a player's own piece, or a regular piece moving backward.
+		void move(const Move& m);
+		
+		
 		//void turn(const Turn& t);
 		
 		
