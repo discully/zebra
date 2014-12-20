@@ -11,12 +11,134 @@ class TestBoard : public ::testing::Test
 	
 		void SetUp()
 		{
-			this->start = zebra::Board();
+			start = zebra::Board();
+			
+			rows = zebra::Board(
+				std::bitset<zebra::Rules::BOARD_SQUARES> black_pieces("00000000000000000000111100001111"),
+				std::bitset<zebra::Rules::BOARD_SQUARES> white_pieces("11110000111100000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES> king_pieces( "00000000111100000000111100000000")
+				);
 		}
 		
 		zebra::Board start;
+		zebra::Board rows;
 };
 
+
+//
+// Constructors
+
+
+// Board();
+
+
+TEST_F(TestBoard, DefaultConstructorProducesStartingBoard)
+{
+	const zebra::square pieces = zebra::Rules::PLAYER_PIECES;
+	const zebra::square squares = zebra::Rules::BOARD_SQUARES;
+	
+	for(zebra::square s = 1; s <= pieces; ++s)
+	{
+		ASSERT_TRUE( start.black(s) ) << "Square " << s << " is not black.";
+		ASSERT_TRUE( start.man(s) ) << "Square " << s << " is not a man.";
+	}
+	
+	for(zebra::square s = pieces + 1; s <= squares - pieces; ++s)
+	{
+		ASSERT_TRUE( start.empty(s) ) << "Square " << s << " is not empty.";
+	}
+	
+	for(zebra::square s = squares - pieces + 1; s <= squares; ++s)
+	{
+		ASSERT_TRUE( start.white(s) ) << "Square " << s << " is not white.";
+		ASSERT_TRUE( start.man(s) ) << "Square " << s << " is not a man.";
+	}
+}
+
+
+// zebra::Board::Board(
+//	const std::bitset<Rules::BOARD_SQUARES>& black_pieces,
+//	const std::bitset<Rules::BOARD_SQUARES>& white_pieces,
+//	const std::bitset<Rules::BOARD_SQUARES>& king_pices
+//	)
+
+
+TEST_F(TestBoard, BitsetsConstructorThrowsInvalidArgumentIfBlackAndWhiteHaveSameBitsSet)
+{
+	const std::bitset<zebra::Rules::BOARD_SQUARES> black_pieces("11110000010000000000000000000000");
+	const std::bitset<zebra::Rules::BOARD_SQUARES> white_pieces("00001111010000000000000000000000");
+	const std::bitset<zebra::Rules::BOARD_SQUARES> king_pieces( "00000000000000000000000000000000");
+	
+	ASSERT_THROW( zebra::Board(black_pieces, white_pieces, king_pieces), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, BitsetsConstructorThrowsInvalidArgumentIfBlackHasTooManyBitsSet)
+{
+	const std::bitset<zebra::Rules::BOARD_SQUARES> black_pieces("11111111111111111111111111110000");
+	const std::bitset<zebra::Rules::BOARD_SQUARES> white_pieces("00000000000000000000000000000000");
+	const std::bitset<zebra::Rules::BOARD_SQUARES> king_pieces( "00000000000000000000000000000000");
+	
+	ASSERT_THROW( zebra::Board(black_pieces, white_pieces, king_pieces), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, BitsetsConstructorThrowsInvalidArgumentIfWhiteHasTooManyBitsSet)
+{
+	const std::bitset<zebra::Rules::BOARD_SQUARES> black_pieces("00000000000000000000000000000000");
+	const std::bitset<zebra::Rules::BOARD_SQUARES> white_pieces("11111111111111111111111111110000");
+	const std::bitset<zebra::Rules::BOARD_SQUARES> king_pieces( "00000000000000000000000000000000");
+	
+	ASSERT_THROW( zebra::Board(black_pieces, white_pieces, king_pieces), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, BitsetsConstructorThrowsInvalidArgumentIfKingsHasBitsSetNotInBlacksOrWhites)
+{
+	const std::bitset<zebra::Rules::BOARD_SQUARES> black_pieces("11110000000000000000000000000000");
+	const std::bitset<zebra::Rules::BOARD_SQUARES> white_pieces("00001111000000000000000000000000");
+	const std::bitset<zebra::Rules::BOARD_SQUARES> king_pieces( "00111100000000000000000000000001");
+	
+	ASSERT_THROW( zebra::Board(black_pieces, white_pieces, king_pieces), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, BitsetsConstructorProducesExpectedBoard)
+{
+	const std::bitset<zebra::Rules::BOARD_SQUARES> black_pieces("00000000000000000000111100001111");
+	const std::bitset<zebra::Rules::BOARD_SQUARES> white_pieces("11110000111100000000000000000000");
+	const std::bitset<zebra::Rules::BOARD_SQUARES> king_pieces( "00000000111100000000111100000000");
+	
+	const zebra::Board b(black_pieces, white_pieces, king_pieces);
+	
+	for(zebra::square s = 1; s <= zebra::Rules::BOARD_SQUARES; ++s)
+	{
+		if( s <= 4 )
+		{
+			ASSERT_TRUE( b.black(s) ) << "Square " << s << " is not black.";
+			ASSERT_TRUE( b.man(s) ) << "Square " << s << " is not a man.";
+		}
+		else if( s >= 9 && s <= 12 )
+		{
+			ASSERT_TRUE( b.black(s) ) << "Square " << s << " is not black.";
+			ASSERT_TRUE( b.king(s) ) << "Square " << s << " is not a king.";
+		}
+		else if( s >= 21 && s <= 24 )
+		{
+			ASSERT_TRUE( b.white(s) ) << "Square " << s << " is not white.";
+			ASSERT_TRUE( b.king(s) ) << "Square " << s << " is not a king.";
+		}
+		else if( s >= 29 && s <= 32 )
+		{
+			ASSERT_TRUE( b.white(s) ) << "Square " << s << " is not white.";
+			ASSERT_TRUE( b.man(s) ) << "Square " << s << " is not a man.";
+		}
+		else
+		{
+			ASSERT_TRUE( b.empty(s) ) << "Square " << s << " is not empty.";
+		}
+	}
+}
 
 
 //
