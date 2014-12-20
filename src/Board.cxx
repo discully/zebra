@@ -131,7 +131,7 @@ bool zebra::Board::white(const coord& x, const coord& y) const
 
 
 
-std::pair<zebra::Board::coord, zebra::Board::coord> zebra::Board::getCoordinates(const square& s) const
+std::pair<zebra::coord, zebra::coord> zebra::Board::getCoordinates(const square& s) const
 {
 	this->validateSquare(s);
 	
@@ -143,7 +143,7 @@ std::pair<zebra::Board::coord, zebra::Board::coord> zebra::Board::getCoordinates
 
 
 
-zebra::Board::square zebra::Board::getSquare(const coord& x, const coord& y) const
+zebra::square zebra::Board::getSquare(const coord& x, const coord& y) const
 {
 	if( x > Rules::BOARD_SIZE || y > Rules::BOARD_SIZE )
 	{

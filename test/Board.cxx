@@ -40,7 +40,7 @@ TEST_F(TestBoard, BlackSThrowsOutOfRangeIfSquareIsTooLarge)
 
 TEST_F(TestBoard, BlackSReturnsTrueForBlackStartingPositions)
 {
-	for(zebra::Board::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
+	for(zebra::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
 	{
 		ASSERT_TRUE( start.black(s) ) << "Failed on square " << s << ".";
 	}
@@ -49,9 +49,9 @@ TEST_F(TestBoard, BlackSReturnsTrueForBlackStartingPositions)
 
 TEST_F(TestBoard, BlackSReturnsFalseForEmptyStartingPositions)
 {
-	const zebra::Board::square begin = zebra::Rules::PLAYER_PIECES + 1;
-	const zebra::Board::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
-	for(zebra::Board::square s = begin; s <= end; ++s)
+	const zebra::square begin = zebra::Rules::PLAYER_PIECES + 1;
+	const zebra::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
+	for(zebra::square s = begin; s <= end; ++s)
 	{
 		ASSERT_FALSE( start.black(s) ) << "Failed on square " << s << ".";
 	}
@@ -60,8 +60,8 @@ TEST_F(TestBoard, BlackSReturnsFalseForEmptyStartingPositions)
 
 TEST_F(TestBoard, BlackSReturnsFalseForWhiteStartingPositions)
 {
-	zebra::Board::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
-	for(zebra::Board::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
+	zebra::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
+	for(zebra::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
 	{
 		ASSERT_FALSE( start.black(s) ) << "Failed on square " << s << ".";
 	}
@@ -89,7 +89,7 @@ TEST_F(TestBoard, EmptyThrowsOutOfRangeIfSquareIsTooLarge)
 
 TEST_F(TestBoard, EmptyReturnsFalseForBlackStartingPositions)
 {
-	for(zebra::Board::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
+	for(zebra::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
 	{
 		ASSERT_FALSE( start.empty(s) ) << "Failed on square " << s << ".";
 	}
@@ -98,9 +98,9 @@ TEST_F(TestBoard, EmptyReturnsFalseForBlackStartingPositions)
 
 TEST_F(TestBoard, EmptyReturnsTrueForEmptyStartingPositions)
 {
-	const zebra::Board::square begin = zebra::Rules::PLAYER_PIECES + 1;
-	const zebra::Board::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
-	for(zebra::Board::square s = begin; s <= end; ++s)
+	const zebra::square begin = zebra::Rules::PLAYER_PIECES + 1;
+	const zebra::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
+	for(zebra::square s = begin; s <= end; ++s)
 	{
 		ASSERT_TRUE( start.empty(s) ) << "Failed on square " << s << ".";
 	}
@@ -109,8 +109,8 @@ TEST_F(TestBoard, EmptyReturnsTrueForEmptyStartingPositions)
 
 TEST_F(TestBoard, EmptyReturnsFalseForWhiteStartingPositions)
 {
-	zebra::Board::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
-	for(zebra::Board::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
+	zebra::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
+	for(zebra::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
 	{
 		ASSERT_FALSE( start.empty(s) ) << "Failed on square " << s << ".";
 	}
@@ -138,7 +138,7 @@ TEST_F(TestBoard, KingThrowsOutOfRangeIfSquareIsTooLarge)
 
 TEST_F(TestBoard, KingReturnsFalseForAllStartingPositions)
 {
-	for(zebra::Board::square s = 1; s <= zebra::Rules::BOARD_SQUARES; ++s)
+	for(zebra::square s = 1; s <= zebra::Rules::BOARD_SQUARES; ++s)
 	{
 		ASSERT_FALSE( start.king(s) ) << "Failed on square " << s << ".";
 	}
@@ -166,7 +166,7 @@ TEST_F(TestBoard, ManThrowsOutOfRangeIfSquareIsTooLarge)
 
 TEST_F(TestBoard, ManReturnsTrueForBlackStartingPositions)
 {
-	for(zebra::Board::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
+	for(zebra::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
 	{
 		ASSERT_TRUE( start.man(s) ) << "Failed on square " << s << ".";
 	}
@@ -175,9 +175,9 @@ TEST_F(TestBoard, ManReturnsTrueForBlackStartingPositions)
 
 TEST_F(TestBoard, ManReturnsFalseForEmptyStartingPositions)
 {
-	const zebra::Board::square begin = zebra::Rules::PLAYER_PIECES + 1;
-	const zebra::Board::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
-	for(zebra::Board::square s = begin; s <= end; ++s)
+	const zebra::square begin = zebra::Rules::PLAYER_PIECES + 1;
+	const zebra::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
+	for(zebra::square s = begin; s <= end; ++s)
 	{
 		ASSERT_FALSE( start.man(s) ) << "Failed on square " << s << ".";
 	}
@@ -186,8 +186,8 @@ TEST_F(TestBoard, ManReturnsFalseForEmptyStartingPositions)
 
 TEST_F(TestBoard, ManReturnsTrueForWhiteStartingPositions)
 {
-	zebra::Board::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
-	for(zebra::Board::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
+	zebra::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
+	for(zebra::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
 	{
 		ASSERT_TRUE( start.man(s) ) << "Failed on square " << s << ".";
 	}
@@ -215,7 +215,7 @@ TEST_F(TestBoard, OccupiedThrowsOutOfRangeIfSquareIsTooLarge)
 
 TEST_F(TestBoard, OccupiedReturnsTrueForBlackStartingPositions)
 {
-	for(zebra::Board::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
+	for(zebra::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
 	{
 		ASSERT_TRUE( start.occupied(s) ) << "Failed on square " << s << ".";
 	}
@@ -224,9 +224,9 @@ TEST_F(TestBoard, OccupiedReturnsTrueForBlackStartingPositions)
 
 TEST_F(TestBoard, OccupiedReturnsFalseForEmptyStartingPositions)
 {
-	const zebra::Board::square begin = zebra::Rules::PLAYER_PIECES + 1;
-	const zebra::Board::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
-	for(zebra::Board::square s = begin; s <= end; ++s)
+	const zebra::square begin = zebra::Rules::PLAYER_PIECES + 1;
+	const zebra::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
+	for(zebra::square s = begin; s <= end; ++s)
 	{
 		ASSERT_FALSE( start.occupied(s) ) << "Failed on square " << s << ".";
 	}
@@ -235,8 +235,8 @@ TEST_F(TestBoard, OccupiedReturnsFalseForEmptyStartingPositions)
 
 TEST_F(TestBoard, OccupiedReturnsTrueForWhiteStartingPositions)
 {
-	zebra::Board::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
-	for(zebra::Board::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
+	zebra::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
+	for(zebra::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
 	{
 		ASSERT_TRUE( start.occupied(s) ) << "Failed on square " << s << ".";
 	}
@@ -264,7 +264,7 @@ TEST_F(TestBoard, WhiteThrowsOutOfRangeIfSquareIsTooLarge)
 
 TEST_F(TestBoard, WhiteReturnsFalseForBlackStartingPositions)
 {
-	for(zebra::Board::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
+	for(zebra::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
 	{
 		ASSERT_FALSE( start.white(s) ) << "Failed on square " << s << ".";
 	}
@@ -273,9 +273,9 @@ TEST_F(TestBoard, WhiteReturnsFalseForBlackStartingPositions)
 
 TEST_F(TestBoard, WhiteReturnsFalseForEmptyStartingPositions)
 {
-	const zebra::Board::square begin = zebra::Rules::PLAYER_PIECES + 1;
-	const zebra::Board::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
-	for(zebra::Board::square s = begin; s <= end; ++s)
+	const zebra::square begin = zebra::Rules::PLAYER_PIECES + 1;
+	const zebra::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
+	for(zebra::square s = begin; s <= end; ++s)
 	{
 		ASSERT_FALSE( start.white(s) ) << "Failed on square " << s << ".";
 	}
@@ -284,8 +284,8 @@ TEST_F(TestBoard, WhiteReturnsFalseForEmptyStartingPositions)
 
 TEST_F(TestBoard, WhiteReturnsTrueForWhiteStartingPositions)
 {
-	zebra::Board::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
-	for(zebra::Board::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
+	zebra::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
+	for(zebra::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
 	{
 		ASSERT_TRUE( start.white(s) ) << "Failed on square " << s << ".";
 	}
@@ -317,10 +317,10 @@ TEST_F(TestBoard, GetCoordinatesThrowsOutOfRangeIfSquareIsTooLarge)
 
 TEST_F(TestBoard, GetCoordinatesReturnsExpectedValues)
 {
-	typedef zebra::Board::coord coord;
+	typedef zebra::coord coord;
 	
 	const size_t n = zebra::Rules::BOARD_SIZE;
-	zebra::Board::square s = 0;
+	zebra::square s = 0;
 	
 	coord y = n-1;
 	for(coord row = 0; row < n; ++row, --y)
@@ -357,10 +357,10 @@ TEST_F(TestBoard, GetSquareThrowsOutOfRangeIfYIsTooLarge)
 
 TEST_F(TestBoard, GetSquareThrowsInvalidArgumentForUnplayableSquares)
 {
-	typedef zebra::Board::coord coord;
+	typedef zebra::coord coord;
 	
 	const size_t n = zebra::Rules::BOARD_SIZE;
-	zebra::Board::square s = 0;
+	zebra::square s = 0;
 	
 	coord y = n-1;
 	for(coord row = 0; row < n; ++row, --y)
@@ -382,10 +382,10 @@ TEST_F(TestBoard, GetSquareThrowsInvalidArgumentForUnplayableSquares)
 
 TEST_F(TestBoard, GetSquareReturnsExpectedValues)
 {
-	typedef zebra::Board::coord coord;
+	typedef zebra::coord coord;
 	
 	const size_t n = zebra::Rules::BOARD_SIZE;
-	zebra::Board::square s = 0;
+	zebra::square s = 0;
 	
 	coord y = n-1;
 	for(coord row = 0; row < n; ++row, --y)

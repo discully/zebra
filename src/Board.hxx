@@ -5,8 +5,6 @@
 #include <cstdint>
 #include <utility>
 
-#include "Move.hxx"
-#include "Piece.hxx"
 #include "Rules.hxx"
 
 
@@ -21,12 +19,6 @@ namespace zebra
 class zebra::Board
 {
 	public:
-		
-		/// Conventional index of a playable board square, in the range [1,BOARD_SIZE].
-		typedef unsigned int square;
-		
-		/// Co-ordinate of any square on the board, in the range [0,BOARD_SIZE).
-		typedef unsigned int coord;
 		
 		
 		/// Constructs a board with the customary starting set-up.

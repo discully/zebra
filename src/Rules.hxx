@@ -6,15 +6,12 @@
 namespace zebra
 {
 	class Rules;
+		
+	/// Conventional index of a playable board square, in the range [1,BOARD_SIZE].
+	typedef unsigned int square;
 	
-	typedef uint32_t Position;
-	
-	//enum Colour
-	//{
-	//	NONE,
-	//	BLACK,
-	//	WHITE
-	//};
+	/// Co-ordinate of any square on the board, in the range [0,BOARD_SIZE).
+	typedef unsigned int coord;
 }
 
 
