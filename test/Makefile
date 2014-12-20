@@ -7,11 +7,15 @@ COMPILE=$(COMPILER) $(OPTS) -I../src ../src/*.o
 DEFAULT_LIBRARIES=-lgtest -lgtest_main -lpthread
 
 
-all: Board
+all: Board Move
 	$(COMPILE) *.cxx -o all.exe $(DEFAULT_LIBRARIES)
 
 
 Board:
+	$(COMPILE) $@.cxx -o $@.exe $(DEFAULT_LIBRARIES)
+
+
+Move:
 	$(COMPILE) $@.cxx -o $@.exe $(DEFAULT_LIBRARIES)
 
 
