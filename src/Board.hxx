@@ -23,8 +23,22 @@ class zebra::Board
 	public:
 		
 		
-		/// Constructs a board with the customary starting set-up.
+		/// Constructs a board with the normal starting set-up.
 		Board();
+		
+		
+		/// Constructs a board with a custom set-up.
+		/// \param black_pieces A bitset whose bits [0,n-1] represent the squares [1,n] and are true where black pieces are.
+		/// \param white_pieces A bitset whose bits [0,n-1] represent the squares [1,n] and are true where white pieces are.
+		/// \param king_pieces  A bitset whose bits [0,n-1] represent the squares [1,n] and are true where king pieces are.
+		/// \throws std::invalid_argument If there are more than PLAYER_PIECES bits set in any of the arguments,
+		/// if both \p black_pieces and \p white_pieces have two identical bits set, or if \p king_pieces has
+		/// bits set where neither \p black_pieces nor \p white_pieces are set.
+		Board(
+			const std::bitset<Rules::BOARD_SQUARES>& black_pieces,
+			const std::bitset<Rules::BOARD_SQUARES>& white_pieces,
+			const std::bitset<Rules::BOARD_SQUARES>& king_pieces
+			);
 		
 		
 		/// Copy-constructor.

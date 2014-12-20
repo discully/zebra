@@ -13,6 +13,29 @@ zebra::Board::Board()
 
 
 
+zebra::Board::Board(
+	const std::bitset<Rules::BOARD_SQUARES>& black_pieces,
+	const std::bitset<Rules::BOARD_SQUARES>& white_pieces,
+	const std::bitset<Rules::BOARD_SQUARES>& king_pieces
+	)
+	: blacks(black_pieces), whites(white_pieces), kings(king_pieces)
+{
+	if(
+		( this->blacks.count() > Rules::PLAYER_PIECES )
+		||
+		( this->whites.count() > Rules::PLAYER_PIECES )
+		||
+		( (this->blacks & this->whites).any() )
+		||
+		( (this->kings & (this->blacks | this->whites)) != this->kings )
+	)
+	{
+		throw std::invalid_argument("Invalid board specification");
+	}
+}
+
+
+
 zebra::Board::Board(const Board& b)
 	: blacks(b.blacks), whites(b.whites), kings(b.kings)
 {}
