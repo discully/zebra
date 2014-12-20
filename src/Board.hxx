@@ -16,6 +16,7 @@ namespace zebra
 
 
 
+/// Represents the draughts board and the locations and ranks of all pieces.
 class zebra::Board
 {
 	public:
