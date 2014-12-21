@@ -178,6 +178,7 @@ void zebra::Board::move(const Move& mv)
 		throw std::invalid_argument("Invalid move");
 	}
 	
+	// Update position of player's piece
 	std::bitset<Rules::BOARD_SQUARES>& player = is_white ? this->whites : this->blacks;
 	
 	player.reset( mv.from() - 1 );
@@ -186,9 +187,10 @@ void zebra::Board::move(const Move& mv)
 	if( is_king )
 	{
 		this->kings.reset( mv.from() - 1 );
-		this->kings.set( mv.from() - 1 );
+		this->kings.set( mv.to() - 1 );
 	}
 	
+	// Remove taken-pieces
 	if( is_jump )
 	{
 		std::bitset<Rules::BOARD_SQUARES>& opponent = is_white ? this->blacks : this->whites;
@@ -196,6 +198,12 @@ void zebra::Board::move(const Move& mv)
 		
 		opponent.reset( jumped - 1 );
 		this->kings.reset( jumped - 1 );
+	}
+	
+	// Promote pieces which made it to the far side
+	if( ( is_white && (mv.to() <= Rules::BOARD_ROW) ) || ( ! is_white && (mv.to() > (Rules::BOARD_SQUARES - Rules::BOARD_ROW)) ) )
+	{
+		this->kings.set( mv.to() - 1 );
 	}
 }
 
