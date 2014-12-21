@@ -14,14 +14,28 @@ class TestBoard : public ::testing::Test
 			start = zebra::Board();
 			
 			rows = zebra::Board(
-				std::bitset<zebra::Rules::BOARD_SQUARES> black_pieces("00000000000000000000111100001111"),
-				std::bitset<zebra::Rules::BOARD_SQUARES> white_pieces("11110000111100000000000000000000"),
-				std::bitset<zebra::Rules::BOARD_SQUARES> king_pieces( "00000000111100000000111100000000")
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000000111100001111"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("11110000111100000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000111100000000111100000000")
+				);
+			
+			attack = zebra::Board(
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000001111000011110000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00001111000011110000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000000000000000000")
+				);
+			
+			royal_attack = zebra::Board(
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000001111000011110000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00001111000011110000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00001111000011111111000011110000")
 				);
 		}
 		
 		zebra::Board start;
 		zebra::Board rows;
+		zebra::Board attack;
+		zebra::Board royal_attack;
 };
 
 
@@ -458,6 +472,79 @@ TEST_F(TestBoard, MoveThrowsInvalidArgumentIfMoveIsJumpOverSameColour)
 	zebra::Move mv(from, from - zebra::Rules::JUMP_SHORT);
 	
 	ASSERT_THROW( start.move(mv), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, MoveLeavesInitialPositionEmpty)
+{
+	const zebra::Move mv(22, 18);
+	
+	start.move(mv);
+	
+	ASSERT_TRUE( start.empty(mv.from()) );
+}
+
+
+TEST_F(TestBoard, MoveLeavesFinalPositionOccupied)
+{
+	const zebra::Move mv(22, 18);
+	
+	start.move(mv);
+	
+	ASSERT_TRUE( start.occupied(mv.to()) );
+}
+
+
+TEST_F(TestBoard, MoveLeavesFinalPositionWithSameColour)
+{
+	const zebra::Move mv(22, 18);
+	
+	bool is_black = start.black(mv.from());
+	start.move(mv);
+	
+	ASSERT_EQ( is_black, start.black(mv.to()) );
+}
+
+
+TEST_F(TestBoard, MoveLeavesManWithSameRank)
+{
+	const zebra::Move mv(22, 18);
+	
+	start.move(mv);
+	
+	ASSERT_TRUE( start.man(mv.to()) );
+}
+
+
+TEST_F(TestBoard, MoveLeavesKingWithSameRank)
+{
+	const zebra::Move mv(18, 11);
+	
+	royal_attack.move(mv);
+	
+	ASSERT_TRUE( royal_attack.king(mv.to()) );
+}
+
+
+TEST_F(TestBoard, MoveSetsJumpedPositionEmpty)
+{
+	const zebra::Move mv(18, 11);
+	
+	attack.move(mv);
+	
+	ASSERT_TRUE( attack.empty(mv.jumped()) );
+}
+
+
+TEST_F(TestBoard, MoveSetsManToKingIfFinishingOnFinalRow)
+{
+	const zebra::Move mv1(18, 11);
+	const zebra::Move mv2(11,  4);
+	
+	attack.move(mv1);
+	attack.move(mv2);
+	
+	ASSERT_TRUE( attack.king(mv2.to()) );
 }
 
 
