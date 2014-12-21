@@ -54,20 +54,28 @@ bool zebra::Move::jump() const
 {
 	if( this->positions.first % Rules::BOARD_ROW != 0 )
 	{
-		// Check possible jumps in an easterly direction
+		if( this->positions.first <= (Rules::BOARD_SQUARES - Rules::BOARD_SIZE) )
+		{
+			if( jumpSE(this->positions.first) == this->positions.second ) return true;
+		}
 		
-		if( this->positions.first - Rules::JUMP_SHORT == this->positions.second ) return true;
-		
-		if( this->positions.first + Rules::JUMP_LONG  == this->positions.second ) return true;
+		if( this->positions.first > Rules::BOARD_SIZE )
+		{
+			if( jumpNE(this->positions.first) == this->positions.second ) return true;
+		}
 	}
 	
 	if( this->positions.first % Rules::BOARD_ROW != 1 )
 	{
-		// Check possible jumps in a westerly direction
+		if( this->positions.first <= (Rules::BOARD_SQUARES - Rules::BOARD_SIZE) )
+		{
+			if( jumpSW(this->positions.first) == this->positions.second ) return true;
+		}
 		
-		if( this->positions.first + Rules::JUMP_SHORT == this->positions.second ) return true;
-		
-		if( this->positions.first - Rules::JUMP_LONG  == this->positions.second ) return true;
+		if( this->positions.first > Rules::BOARD_SIZE )
+		{
+			if( jumpNW(this->positions.first) == this->positions.second ) return true;
+		}
 	}
 	
 	return false;
@@ -81,24 +89,24 @@ zebra::square zebra::Move::jumped() const
 	
 	if( this->positions.second > this->positions.first )
 	{
-		if( this->positions.first + Rules::JUMP_SHORT == this->positions.second )
+		if( jumpSE(this->positions.first) == this->positions.second )
 		{
-			return ( this->positions.first + Rules::SLIDE_SHORT );
+			return slideSE(this->positions.first);
 		}
 		else
 		{
-			return ( this->positions.first + Rules::SLIDE_LONG );
+			return slideSW(this->positions.first);
 		}
 	}
 	else
 	{
-		if( this->positions.first - Rules::JUMP_SHORT == this->positions.second )
+		if( jumpNE(this->positions.first) == this->positions.second )
 		{
-			return ( this->positions.first - Rules::SLIDE_SHORT );
+			return slideNE(this->positions.first);
 		}
 		else
 		{
-			return ( this->positions.first - Rules::SLIDE_LONG );
+			return slideNW(this->positions.first);
 		}
 	}
 }
@@ -107,22 +115,30 @@ zebra::square zebra::Move::jumped() const
 
 bool zebra::Move::slide() const
 {
-	if( this->positions.first % Rules::BOARD_ROW != 0 )
+	if( ((this->positions.first % Rules::BOARD_ROW) != 0) || ((this->positions.first % Rules::BOARD_SIZE) == 0) )
 	{
-		// Check possible slides in an easterly direction
+		if( this->positions.first > Rules::BOARD_ROW )
+		{
+			if( slideNE(this->positions.first) == this->positions.second ) return true;
+		}
 		
-		if( this->positions.first - Rules::SLIDE_SHORT == this->positions.second ) return true;
-		
-		if( this->positions.first + Rules::SLIDE_LONG  == this->positions.second ) return true;
+		if( this->positions.first <= (Rules::BOARD_SQUARES - Rules::BOARD_ROW) )
+		{
+			if( slideSE(this->positions.first) == this->positions.second ) return true;
+		}
 	}
 	
-	if( this->positions.first % Rules::BOARD_ROW != 1 )
+	if( ((this->positions.first % Rules::BOARD_ROW) != 1) || ((this->positions.first % Rules::BOARD_SIZE) == 1) )
 	{
-		// Check possible slides in a westerly direction
+		if( this->positions.first > Rules::BOARD_ROW )
+		{
+			if( slideNW(this->positions.first) == this->positions.second ) return true;
+		}
 		
-		if( this->positions.first + Rules::SLIDE_SHORT == this->positions.second ) return true;
-		
-		if( this->positions.first - Rules::SLIDE_LONG  == this->positions.second ) return true;
+		if( this->positions.first <= (Rules::BOARD_SQUARES - Rules::BOARD_ROW) )
+		{
+			if( slideSW(this->positions.first) == this->positions.second ) return true;
+		}
 	}
 	
 	return false;

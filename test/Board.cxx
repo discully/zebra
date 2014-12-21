@@ -339,11 +339,6 @@ TEST_F(TestBoard, ManReturnsTrueForWhiteStartingPositions)
 
 TEST_F(TestBoard, MovesReturnsSevenMovesAtStart)
 {
-	std::vector<zebra::Move> r = start.moves(true);
-	for(std::vector<zebra::Move>::iterator rit = r.begin(); rit != r.end(); ++rit)
-	{
-		std::cout << *rit << std::endl;
-	}
 	ASSERT_EQ( 7, start.moves(true).size() );
 }
 
@@ -456,7 +451,7 @@ TEST_F(TestBoard, WhiteReturnsTrueForWhiteStartingPositions)
 TEST_F(TestBoard, MoveThrowsInvalidArgumentIfMoveIsFromEmptySquare)
 {
 	const zebra::square from = 18;
-	zebra::Move mv(from, from - zebra::Rules::SLIDE_SHORT);
+	zebra::Move mv(from, zebra::slideNE(from));
 	
 	ASSERT_THROW( start.move(mv), std::invalid_argument );
 }
@@ -465,7 +460,7 @@ TEST_F(TestBoard, MoveThrowsInvalidArgumentIfMoveIsFromEmptySquare)
 TEST_F(TestBoard, MoveThrowsInvalidArgumentIfMoveIsToOccupiedSquare)
 {
 	const zebra::square to = 23;
-	zebra::Move mv(to + zebra::Rules::SLIDE_SHORT, to);
+	zebra::Move mv(zebra::slideSW(to), to);
 	
 	ASSERT_THROW( start.move(mv), std::invalid_argument );
 }
@@ -474,7 +469,7 @@ TEST_F(TestBoard, MoveThrowsInvalidArgumentIfMoveIsToOccupiedSquare)
 TEST_F(TestBoard, MoveThrowsInvalidArgumentIfMoveIsJumpOverEmptySquare)
 {
 	const zebra::square from = 23;
-	zebra::Move mv(from, from - zebra::Rules::JUMP_SHORT);
+	zebra::Move mv(from, zebra::jumpNE(from));
 	
 	ASSERT_THROW( start.move(mv), std::invalid_argument );
 }
@@ -483,7 +478,7 @@ TEST_F(TestBoard, MoveThrowsInvalidArgumentIfMoveIsJumpOverEmptySquare)
 TEST_F(TestBoard, MoveThrowsInvalidArgumentIfMoveIsJumpOverSameColour)
 {
 	const zebra::square from = 26;
-	zebra::Move mv(from, from - zebra::Rules::JUMP_SHORT);
+	zebra::Move mv(from, zebra::jumpNE(from));
 	
 	ASSERT_THROW( start.move(mv), std::invalid_argument );
 }

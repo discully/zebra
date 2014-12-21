@@ -19,5 +19,9 @@ Move:
 	$(COMPILE) $@.cxx -o $@.exe $(DEFAULT_LIBRARIES)
 
 
+Rules:
+	$(COMPILE) $@.cxx -o $@.exe $(DEFAULT_LIBRARIES)
+
+
 clean:
 	rm *.exe

@@ -5,14 +5,18 @@ OPTS=-std=c++11 -pedantic-errors -Wall -Wextra -Werror -Wfatal-errors -Wwrite-st
 COMPILE=$(COMPILER) $(OPTS)
 
 
-all: Board Move
+all: Rules Board Move
 
 
-Board:
+Board: Rules Move
 	$(COMPILE) $@.cxx
 
 
-Move:
+Move: Rules
+	$(COMPILE) $@.cxx
+
+
+Rules:
 	$(COMPILE) $@.cxx
 
 

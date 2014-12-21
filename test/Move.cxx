@@ -14,27 +14,31 @@ class TestMove : public ::testing::Test
 		{
 			start = 18;
 			
-			short_slide_fwd = new zebra::Move(start, start - zebra::Rules::SLIDE_SHORT);
-			short_slide_bwd = new zebra::Move(start, start + zebra::Rules::SLIDE_SHORT);
-			long_slide_fwd  = new zebra::Move(start, start - zebra::Rules::SLIDE_LONG);
-			long_slide_bwd  = new zebra::Move(start, start + zebra::Rules::SLIDE_LONG);
-			short_jump_fwd  = new zebra::Move(start, start - zebra::Rules::JUMP_SHORT);
-			short_jump_bwd  = new zebra::Move(start, start + zebra::Rules::JUMP_SHORT);
-			long_jump_fwd   = new zebra::Move(start, start - zebra::Rules::JUMP_LONG);
-			long_jump_bwd   = new zebra::Move(start, start + zebra::Rules::JUMP_LONG);
+			short_slide_fwd = new zebra::Move(start, zebra::slideNE(start));
+			short_slide_bwd = new zebra::Move(start, zebra::slideSW(start));
+			long_slide_fwd  = new zebra::Move(start, zebra::slideNW(start));
+			long_slide_bwd  = new zebra::Move(start, zebra::slideSW(start));
+			short_jump_fwd  = new zebra::Move(start, zebra::jumpNE(start));
+			short_jump_bwd  = new zebra::Move(start, zebra::jumpSW(start));
+			long_jump_fwd   = new zebra::Move(start, zebra::jumpNW(start));
+			long_jump_bwd   = new zebra::Move(start, zebra::jumpSE(start));
 			
 			short_slide = short_slide_fwd;
-			long_slide = long_slide_bwd;
-			short_jump = short_jump_bwd;
-			long_jump = long_jump_fwd;
+			long_slide  = long_slide_bwd;
+			short_jump  = short_jump_bwd;
+			long_jump   = long_jump_fwd;
 		}
 		
 		void TearDown()
 		{
-			delete(short_slide);
-			delete(long_slide);
-			delete(short_jump);
-			delete(long_jump);
+			if( short_slide_fwd != 0 ) { delete(short_slide_fwd); short_slide_fwd = 0; }
+			if( short_slide_bwd != 0 ) { delete(short_slide_bwd); short_slide_bwd = 0; }
+			if(  long_slide_fwd != 0 ) { delete( long_slide_fwd);  long_slide_fwd = 0; }
+			if(  long_slide_bwd != 0 ) { delete( long_slide_bwd);  long_slide_bwd = 0; }
+			if( short_jump_fwd != 0 ) { delete(short_jump_fwd); short_jump_fwd = 0; }
+			if( short_jump_bwd != 0 ) { delete(short_jump_bwd); short_jump_bwd = 0; }
+			if(  long_jump_fwd != 0 ) { delete( long_jump_fwd);  long_jump_fwd = 0; }
+			if(  long_jump_bwd != 0 ) { delete( long_jump_bwd);  long_jump_bwd = 0; }
 		}
 		
 		zebra::square start;
@@ -102,25 +106,25 @@ TEST_F(TestMove, JumpedReturnsZeroForSlide)
 
 TEST_F(TestMove, JumpedReturnsExpectedForLongJumpForward)
 {
-	ASSERT_EQ( start - zebra::Rules::SLIDE_LONG, long_jump_fwd->jumped() );
+	ASSERT_EQ( zebra::slideNW(start), long_jump_fwd->jumped() );
 }
 
 
 TEST_F(TestMove, JumpedReturnsExpectedForLongJumpBackward)
 {
-	ASSERT_EQ( start + zebra::Rules::SLIDE_LONG, long_jump_bwd->jumped() );
+	ASSERT_EQ( zebra::slideSE(start), long_jump_bwd->jumped() );
 }
 
 
 TEST_F(TestMove, JumpedReturnsExpectedForShortJumpForward)
 {
-	ASSERT_EQ( start - zebra::Rules::SLIDE_SHORT, short_jump_fwd->jumped() );
+	ASSERT_EQ( zebra::slideNE(start), short_jump_fwd->jumped() );
 }
 
 
 TEST_F(TestMove, JumpedReturnsExpectedForShortJumpBackward)
 {
-	ASSERT_EQ( start + zebra::Rules::SLIDE_SHORT, short_jump_bwd->jumped() );
+	ASSERT_EQ( zebra::slideSW(start), short_jump_bwd->jumped() );
 }
 
 
@@ -156,7 +160,7 @@ TEST_F(TestMove, SlideReturnsFalseForShortSlide)
 
 TEST_F(TestMove, ToReturnsExpectedValue)
 {
-	ASSERT_EQ(start - zebra::Rules::SLIDE_SHORT, short_slide_fwd->to());
+	ASSERT_EQ( zebra::slideNE(start), short_slide_fwd->to());
 }
 
 

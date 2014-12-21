@@ -138,8 +138,8 @@ std::vector<zebra::Move> zebra::Board::jumps(const square& from) const
 	
 	if( go_north && go_east && ( ! is_black || is_king ) )
 	{
-		to = from - Rules::JUMP_SHORT;
-		over = from - Rules::SLIDE_SHORT;
+		to = jumpNE(from);
+		over = slideNE(from);
 		if( this->empty(to) && this->occupied(over) && (is_black != this->black(over)) )
 		{
 			results.push_back( zebra::Move(from, to) );
@@ -148,8 +148,8 @@ std::vector<zebra::Move> zebra::Board::jumps(const square& from) const
 	
 	if( go_north && go_west && ( ! is_black || is_king ) )
 	{
-		to = from - Rules::JUMP_LONG;
-		over = from - Rules::SLIDE_LONG;
+		to = jumpNW(from);
+		over = slideNW(from);
 		if( this->empty(to) && this->occupied(over) && (is_black != this->black(over)) )
 		{
 			results.push_back( zebra::Move(from, to) );
@@ -158,8 +158,8 @@ std::vector<zebra::Move> zebra::Board::jumps(const square& from) const
 	
 	if( go_south && go_east && ( is_black || is_king ) )
 	{
-		to = from + Rules::JUMP_LONG;
-		over = from + Rules::SLIDE_LONG;
+		to = jumpSE(from);
+		over = slideSE(from);
 		if( this->empty(to) && this->occupied(over) && (is_black != this->black(over)) )
 		{
 			results.push_back( zebra::Move(from, to) );
@@ -168,8 +168,8 @@ std::vector<zebra::Move> zebra::Board::jumps(const square& from) const
 	
 	if( go_south && go_west && ( is_black || is_king ) )
 	{
-		to = from + Rules::JUMP_SHORT;
-		over = from + Rules::SLIDE_SHORT;
+		to = jumpSW(from);
+		over = slideSW(from);
 		if( this->empty(to) && this->occupied(over) && (is_black != this->black(over)) )
 		{
 			results.push_back( zebra::Move(from, to) );
@@ -279,18 +279,9 @@ std::vector<zebra::Move> zebra::Board::slides(const square& from) const
 	square to;
 	std::vector<zebra::Move> results;
 	
-	if( go_north && go_east && ( ! is_black || is_king ) )
+	if( go_south && go_west && ( is_black || is_king ) )
 	{
-		to = from - Rules::SLIDE_SHORT;
-		if( this->empty(to) )
-		{
-			results.push_back( zebra::Move(from, to) );
-		}
-	}
-	
-	if( go_north && go_west && ( ! is_black || is_king ) )
-	{
-		to = from - Rules::SLIDE_LONG;
+		to = slideSW(from);
 		if( this->empty(to) )
 		{
 			results.push_back( zebra::Move(from, to) );
@@ -299,16 +290,25 @@ std::vector<zebra::Move> zebra::Board::slides(const square& from) const
 	
 	if( go_south && go_east && ( is_black || is_king ) )
 	{
-		to = from + Rules::SLIDE_LONG;
+		to = slideSE(from);
 		if( this->empty(to) )
 		{
 			results.push_back( zebra::Move(from, to) );
 		}
 	}
 	
-	if( go_south && go_west && ( is_black || is_king ) )
+	if( go_north && go_west && ( ! is_black || is_king ) )
 	{
-		to = from + Rules::SLIDE_SHORT;
+		to = slideNW(from);
+		if( this->empty(to) )
+		{
+			results.push_back( zebra::Move(from, to) );
+		}
+	}
+	
+	if( go_north && go_east && ( ! is_black || is_king ) )
+	{
+		to = slideNE(from);
 		if( this->empty(to) )
 		{
 			results.push_back( zebra::Move(from, to) );

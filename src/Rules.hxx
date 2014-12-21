@@ -12,6 +12,15 @@ namespace zebra
 	
 	/// Co-ordinate of any square on the board, in the range [0,BOARD_SIZE).
 	typedef unsigned int coord;
+	
+	square slideNE(const square& s);
+	square slideSE(const square& s);
+	square slideSW(const square& s);
+	square slideNW(const square& s);
+	square jumpNE(const square& s);
+	square jumpSE(const square& s);
+	square jumpSW(const square& s);
+	square jumpNW(const square& s);
 }
 
 
@@ -31,18 +40,6 @@ class zebra::Rules
 		
 		/// The number of pieces a player has at the start of a game.
 		static const unsigned int PLAYER_PIECES = 3 * (BOARD_SIZE / 2);
-		
-		/// The change in square number resulting from a slide in the NW or SE direction.
-		static const unsigned int SLIDE_SHORT = 3;
-		
-		/// The change in square number resulting from a slide in the NE or SW direction.
-		static const unsigned int SLIDE_LONG  = 4;
-		
-		/// The change in square number resulting from a jump in the NW or SE direction.
-		static const unsigned int JUMP_SHORT  = 7;
-		
-		/// The change in square number resulting from a jump in the NE or SW direction.
-		static const unsigned int JUMP_LONG   = 9;
 };
 
 
