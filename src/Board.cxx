@@ -96,6 +96,91 @@ bool zebra::Board::empty(const coord& x, const coord& y) const
 
 
 
+std::vector<zebra::Move> zebra::Board::jumps(const bool& is_black) const
+{
+	std::vector<zebra::Move> results;
+	std::vector<zebra::Move> piece_results;
+	
+	for(square s = 1; s <= Rules::BOARD_SQUARES; ++s)
+	{
+		if( this->occupied(s) && (this->black(s) == is_black) )
+		{
+			piece_results = this->jumps(s);
+			results.insert( results.end(), piece_results.begin(), piece_results.end() );
+		}
+	}
+	
+	return results;
+}
+
+
+
+std::vector<zebra::Move> zebra::Board::jumps(const square& from) const
+{
+	this->validateSquare(from);
+	if( this->empty(from) )
+	{
+		throw std::invalid_argument("Square is empty");
+	}
+	
+	const std::pair<coord,coord> from_xy = this->getCoordinates(from);
+	
+	const bool go_east = ( from_xy.first < (Rules::BOARD_SIZE - 2) );
+	const bool go_west = ( from_xy.first > 1 );
+	const bool go_north = ( from_xy.second < (Rules::BOARD_SIZE - 2) );
+	const bool go_south = ( from_xy.second > 1 );
+	const bool is_black = this->black(from);
+	const bool is_king = this->king(from);
+	
+	square to;
+	square over;
+	std::vector<zebra::Move> results;
+	
+	if( go_north && go_east && ( ! is_black || is_king ) )
+	{
+		to = from - Rules::JUMP_SHORT;
+		over = from - Rules::SLIDE_SHORT;
+		if( this->empty(to) && this->occupied(over) && (is_black != this->black(over)) )
+		{
+			results.push_back( zebra::Move(from, to) );
+		}
+	}
+	
+	if( go_north && go_west && ( ! is_black || is_king ) )
+	{
+		to = from - Rules::JUMP_LONG;
+		over = from - Rules::SLIDE_LONG;
+		if( this->empty(to) && this->occupied(over) && (is_black != this->black(over)) )
+		{
+			results.push_back( zebra::Move(from, to) );
+		}
+	}
+	
+	if( go_south && go_east && ( is_black || is_king ) )
+	{
+		to = from + Rules::JUMP_LONG;
+		over = from + Rules::SLIDE_LONG;
+		if( this->empty(to) && this->occupied(over) && (is_black != this->black(over)) )
+		{
+			results.push_back( zebra::Move(from, to) );
+		}
+	}
+	
+	if( go_south && go_west && ( is_black || is_king ) )
+	{
+		to = from + Rules::JUMP_SHORT;
+		over = from + Rules::SLIDE_SHORT;
+		if( this->empty(to) && this->occupied(over) && (is_black != this->black(over)) )
+		{
+			results.push_back( zebra::Move(from, to) );
+		}
+	}
+	
+	return results;
+}
+
+
+
 bool zebra::Board::king(const square& s) const
 {
 	return ( this->occupied(s) && this->kings.test(s-1) );
@@ -124,6 +209,22 @@ bool zebra::Board::man(const coord& x, const coord& y) const
 
 
 
+std::vector<zebra::Move> zebra::Board::moves(const bool& is_black) const
+{
+	std::vector<zebra::Move> jump_moves = this->jumps(is_black);
+	return jump_moves.empty() ? this->slides(is_black) : jump_moves;
+}
+
+
+
+std::vector<zebra::Move> zebra::Board::moves(const square& from) const
+{
+	std::vector<zebra::Move> jump_moves = this->jumps(from);
+	return jump_moves.empty() ? this->slides(from) : jump_moves;
+}
+
+
+
 bool zebra::Board::occupied(const square& s) const
 {
 	this->validateSquare(s);
@@ -135,6 +236,86 @@ bool zebra::Board::occupied(const square& s) const
 bool zebra::Board::occupied(const coord& x, const coord& y) const
 {
 	return this->occupied( this->getSquare(x, y) );
+}
+
+
+
+std::vector<zebra::Move> zebra::Board::slides(const bool& is_black) const
+{
+	std::vector<zebra::Move> results;
+	std::vector<zebra::Move> piece_results;
+	
+	for(square s = 1; s <= Rules::BOARD_SQUARES; ++s)
+	{
+		if( this->occupied(s) && (this->black(s) == is_black) )
+		{
+			piece_results = this->slides(s);
+			results.insert( results.end(), piece_results.begin(), piece_results.end() );
+		}
+	}
+	
+	return results;
+}
+
+
+
+std::vector<zebra::Move> zebra::Board::slides(const square& from) const
+{
+	this->validateSquare(from);
+	if( this->empty(from) )
+	{
+		throw std::invalid_argument("Square is empty");
+	}
+	
+	const std::pair<coord,coord> from_xy = this->getCoordinates(from);
+	
+	const bool go_east = ( from_xy.first < (Rules::BOARD_SIZE - 1) );
+	const bool go_west = ( from_xy.first > 0 );
+	const bool go_north = ( from_xy.second < (Rules::BOARD_SIZE - 1) );
+	const bool go_south = ( from_xy.second > 0 );
+	const bool is_black = this->black(from);
+	const bool is_king = this->king(from);
+	
+	square to;
+	std::vector<zebra::Move> results;
+	
+	if( go_north && go_east && ( ! is_black || is_king ) )
+	{
+		to = from - Rules::SLIDE_SHORT;
+		if( this->empty(to) )
+		{
+			results.push_back( zebra::Move(from, to) );
+		}
+	}
+	
+	if( go_north && go_west && ( ! is_black || is_king ) )
+	{
+		to = from - Rules::SLIDE_LONG;
+		if( this->empty(to) )
+		{
+			results.push_back( zebra::Move(from, to) );
+		}
+	}
+	
+	if( go_south && go_east && ( is_black || is_king ) )
+	{
+		to = from + Rules::SLIDE_LONG;
+		if( this->empty(to) )
+		{
+			results.push_back( zebra::Move(from, to) );
+		}
+	}
+	
+	if( go_south && go_west && ( is_black || is_king ) )
+	{
+		to = from + Rules::SLIDE_SHORT;
+		if( this->empty(to) )
+		{
+			results.push_back( zebra::Move(from, to) );
+		}
+	}
+	
+	return results;
 }
 
 

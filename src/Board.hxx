@@ -3,6 +3,7 @@
 
 #include <bitset>
 #include <cstdint>
+#include <vector>
 #include <utility>
 
 #include "Move.hxx"
@@ -82,6 +83,20 @@ class zebra::Board
 		bool empty(const coord& x, const coord& y) const;
 		
 		
+		/// Get all the jump moves available to a given player.
+		/// \param is_black Specifies the player to get jump moves for, \c true for black, \c false for white.
+		/// \returns The jump moves available to the specified player.
+		std::vector<zebra::Move> jumps(const bool& is_black) const;
+		
+		
+		/// Get all the jump moves available to a given piece.
+		/// \param from The piece to get jump moves for.
+		/// \returns The jump moves available to the specified piece.
+		/// \throws std::out_of_range If \p from is outside of the valid range [1,BOARD_SQUARES].
+		/// \throws std::invalid_arguement If \p from is an empty square.
+		std::vector<zebra::Move> jumps(const square& from) const;
+		
+		
 		/// Check whether a specified square is occupied by a king.
 		/// \returns \c true if the square is occupied by a king, or \c false otherwise.
 		/// \throws std::out_of_range If \p s is outside of the valid range [1,BOARD_SQUARES].
@@ -108,6 +123,20 @@ class zebra::Board
 		bool man(const coord& x, const coord& y) const;
 		
 		
+		/// Get all the moves available to a given player.
+		/// \param is_black Specifies the player to get moves for, \c true for black, \c false for white.
+		/// \returns The result of jumps() if it is not empty, or the result of slides() otherwise.
+		std::vector<zebra::Move> moves(const bool& is_black) const;
+		
+		
+		/// Get all the moves available to a given piece.
+		/// \param from The piece to get moves for.
+		/// \returns The result of jumps() if it is not empty, or the result of slides() otherwise.
+		/// \throws std::out_of_range If \p from is outside of the valid range [1,BOARD_SQUARES].
+		/// \throws std::invalid_arguement If \p from is an empty square.
+		std::vector<zebra::Move> moves(const square& from) const;
+		
+		
 		/// Check whether a specified square is occupied by a piece.
 		/// \returns \c true if the square is occupied by a piece, or \c false otherwise.
 		/// \throws std::out_of_range If \p s is outside of the valid range [1,BOARD_SQUARES].
@@ -119,6 +148,20 @@ class zebra::Board
 		/// \throws std::out_of_range If \p x or \p y are outside of the valid range [0,BOARD_SIZE).
 		/// \throws std::invalid_argument If (\p x, \p y) is not a playable square.
 		bool occupied(const coord& x, const coord& y) const;
+		
+		
+		/// Get all the slide moves available to a given player.
+		/// \param is_black Specifies the player to get slide moves for, \c true for black, \c false for white.
+		/// \returns The slide moves available to the specified player.
+		std::vector<zebra::Move> slides(const bool& is_black) const;
+		
+		
+		/// Get all the slide moves available to a given piece.
+		/// \param from The piece to get slide moves for.
+		/// \returns The slide moves available to the specified piece.
+		/// \throws std::out_of_range If \p from is outside of the valid range [1,BOARD_SQUARES].
+		/// \throws std::invalid_arguement If \p from is an empty square.
+		std::vector<zebra::Move> slides(const square& from) const;
 		
 		
 		/// Check whether a specified square is occupied by a white piece.

@@ -334,6 +334,20 @@ TEST_F(TestBoard, ManReturnsTrueForWhiteStartingPositions)
 // todo
 
 
+// std::vector<zebra::Move> moves(const bool& is_black) const;
+
+
+TEST_F(TestBoard, MovesReturnsSevenMovesAtStart)
+{
+	std::vector<zebra::Move> r = start.moves(true);
+	for(std::vector<zebra::Move>::iterator rit = r.begin(); rit != r.end(); ++rit)
+	{
+		std::cout << *rit << std::endl;
+	}
+	ASSERT_EQ( 7, start.moves(true).size() );
+}
+
+
 // bool occupied(const square& s) const;
 
 
