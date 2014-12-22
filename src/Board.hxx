@@ -208,6 +208,7 @@ class zebra::Board
 		
 	private:
 		
+		/// \throws std::out_of_range If square is outside of the valid range [1,BOARD_SIZE].
 		void validateSquare(const square& s) const;
 		
 		std::bitset< Rules::BOARD_SQUARES > blacks;
