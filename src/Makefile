@@ -12,7 +12,7 @@ Board: Rules Move
 	$(COMPILE) $@.cxx
 
 
-Game: Board Player
+Game: Board Move Player
 	$(COMPILE) $@.cxx
 
 
