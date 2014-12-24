@@ -68,7 +68,7 @@ bool zebra::Board::operator!= (const Board& b) const
 
 bool zebra::Board::black(const square& s) const
 {
-	this->validateSquare(s);
+	this->validate(s);
 	return this->blacks.test(s-1);
 }
 
@@ -83,7 +83,7 @@ bool zebra::Board::black(const coord& x, const coord& y) const
 
 bool zebra::Board::empty(const square& s) const
 {
-	this->validateSquare(s);
+	this->validate(s);
 	return ! ( this->whites.test(s-1) || this->blacks.test(s-1) );
 }
 
@@ -117,7 +117,7 @@ std::vector<zebra::Move> zebra::Board::jumps(const bool& is_black) const
 
 std::vector<zebra::Move> zebra::Board::jumps(const square& from) const
 {
-	this->validateSquare(from);
+	this->validate(from);
 	if( this->empty(from) )
 	{
 		throw std::invalid_argument("Square is empty");
@@ -227,7 +227,7 @@ std::vector<zebra::Move> zebra::Board::moves(const square& from) const
 
 bool zebra::Board::occupied(const square& s) const
 {
-	this->validateSquare(s);
+	this->validate(s);
 	return ( this->whites.test(s-1) || this->blacks.test(s-1) );
 }
 
@@ -261,7 +261,7 @@ std::vector<zebra::Move> zebra::Board::slides(const bool& is_black) const
 
 std::vector<zebra::Move> zebra::Board::slides(const square& from) const
 {
-	this->validateSquare(from);
+	this->validate(from);
 	if( this->empty(from) )
 	{
 		throw std::invalid_argument("Square is empty");
@@ -322,7 +322,7 @@ std::vector<zebra::Move> zebra::Board::slides(const square& from) const
 
 bool zebra::Board::white(const square& s) const
 {
-	this->validateSquare(s);
+	this->validate(s);
 	return this->whites.test(s-1);
 }
 
@@ -337,44 +337,27 @@ bool zebra::Board::white(const coord& x, const coord& y) const
 
 void zebra::Board::move(const Move& mv)
 {
-	const square jumped = mv.jumped();
-	const bool is_jump = (jumped != 0);
-	const bool is_white = this->white(mv.from());
-	const bool is_king = this->king(mv.from());
+	this->validate(mv);
 	
-	if(
-		this->empty(mv.from())
-		||
-		this->occupied(mv.to())
-		||
-		( is_jump && this->empty(jumped) )
-		||
-		( is_jump && is_white == this->white(jumped) )
-		||
-		( is_king && is_white && (mv.from() < mv.to()) )
-		||
-		( is_king && ! is_white && (mv.from() > mv.to()) )
-		)
-	{
-		throw std::invalid_argument("Invalid move");
-	}
+	const bool is_black = this->black(mv.from());
 	
 	// Update position of player's piece
-	std::bitset<Rules::BOARD_SQUARES>& player = is_white ? this->whites : this->blacks;
+	std::bitset<Rules::BOARD_SQUARES>& player = is_black ? this->blacks : this->whites;
 	
-	player.reset( mv.from() - 1 );
-	player.set( mv.to() - 1 );
-	
-	if( is_king )
+	if( this->king(mv.from()) )
 	{
 		this->kings.reset( mv.from() - 1 );
 		this->kings.set( mv.to() - 1 );
 	}
 	
+	player.reset( mv.from() - 1 );
+	player.set( mv.to() - 1 );
+	
 	// Remove taken-pieces
-	if( is_jump )
+	const square jumped = mv.jumped();
+	if( jumped != 0 )
 	{
-		std::bitset<Rules::BOARD_SQUARES>& opponent = is_white ? this->blacks : this->whites;
+		std::bitset<Rules::BOARD_SQUARES>& opponent = is_black ? this->whites : this->blacks;
 		const square jumped = mv.jumped();
 		
 		opponent.reset( jumped - 1 );
@@ -382,7 +365,7 @@ void zebra::Board::move(const Move& mv)
 	}
 	
 	// Promote pieces which made it to the far side
-	if( ( is_white && (mv.to() <= Rules::BOARD_ROW) ) || ( ! is_white && (mv.to() > (Rules::BOARD_SQUARES - Rules::BOARD_ROW)) ) )
+	if( ( is_black ? (mv.to() > (Rules::BOARD_SQUARES - Rules::BOARD_ROW)) : (mv.to() <= Rules::BOARD_ROW) ) )
 	{
 		this->kings.set( mv.to() - 1 );
 	}
@@ -392,7 +375,7 @@ void zebra::Board::move(const Move& mv)
 
 std::pair<zebra::coord, zebra::coord> zebra::Board::getCoordinates(const square& s) const
 {
-	this->validateSquare(s);
+	this->validate(s);
 	
 	const coord y = (s - 1) / (Rules::BOARD_SIZE / 2);
 	const coord x = (((s - 1) % 4) * 2) + ((y+1) % 2);
@@ -418,7 +401,42 @@ zebra::square zebra::Board::getSquare(const coord& x, const coord& y) const
 
 
 
-void zebra::Board::validateSquare(const square& s) const
+void zebra::Board::validate(const zebra::Move& mv) const
+{
+	const square jumped = mv.jumped();
+	const bool is_jump = (jumped != 0);
+	const bool is_black = this->black(mv.from());
+	const bool is_king = this->king(mv.from());
+	
+	if(	this->empty(mv.from()) )
+	{
+		throw std::invalid_argument("Attempt to move from empty square.");
+	}
+	else if( this->occupied(mv.to()) )
+	{
+		throw std::invalid_argument("Attempt to move to occupied square.");
+	}
+	else if( is_jump && this->empty(jumped) )
+	{
+		throw std::invalid_argument("Attempt to jump empty square.");
+	}
+	else if( is_jump && is_black == this->black(jumped) )
+	{
+		throw std::invalid_argument("Attempt to jump own piece.");
+	}
+	else if( is_king && ( is_black ? (mv.from() > mv.to()) : (mv.from() < mv.to()) ) )
+	{
+		throw std::invalid_argument("Attempt to move regular piece backwards.");
+	}
+	else if( ! is_jump && ! this->jumps(is_black).empty() )
+	{
+		throw std::invalid_argument("Attempt to make a slide when a jump is available");
+	}
+}
+
+
+
+void zebra::Board::validate(const square& s) const
 {
 	if( s < 1 || s > Rules::BOARD_SQUARES )
 	{

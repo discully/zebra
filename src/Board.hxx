@@ -182,9 +182,8 @@ class zebra::Board
 		
 		
 		/// Applies a move to the board.
-		/// \throws std::invalid_argument If the move is not valid for the board.
-		/// This could be a move from an unoccupied square, a move to an occupied square, a jump over an unoccupied square,
-		/// a jump over a player's own piece, or a regular piece moving backward.
+		/// \throws std::invalid_argument for all the same reasons Board::validate would.
+		/// If an exception is thrown, the board remains unchanged.
 		void move(const Move& m);
 		
 		
@@ -208,8 +207,19 @@ class zebra::Board
 		
 	private:
 		
+		
+		/// Checks a move to see if it's valid.
+		/// \throws std::invalid_argument If the move is not valid for the board. This could be a:
+		///  * move from an unoccupied square
+		///  * move to an occupied square
+		///  * jump over an unoccupied square
+		///  * jump over a player's own piece
+		///  * regular piece moving backwards
+		///  * slide when a jump was available
+		void validate(const Move& mv) const;
+		
 		/// \throws std::out_of_range If square is outside of the valid range [1,BOARD_SIZE].
-		void validateSquare(const square& s) const;
+		void validate(const square& s) const;
 		
 		std::bitset< Rules::BOARD_SQUARES > blacks;
 		std::bitset< Rules::BOARD_SQUARES > whites;
