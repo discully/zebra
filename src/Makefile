@@ -12,11 +12,15 @@ Board: Rules Move
 	$(COMPILE) $@.cxx
 
 
-Game: Board
+Game: Board Player
 	$(COMPILE) $@.cxx
 
 
 Move: Rules
+	$(COMPILE) $@.cxx
+
+
+Player: Move
 	$(COMPILE) $@.cxx
 
 
