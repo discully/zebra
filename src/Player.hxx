@@ -36,6 +36,9 @@ class zebra::Player
 		/// or \c nullptr if no game is being played.
 		const Game* game() const;
 		
+		/// Is this player fallible?
+		virtual bool onlyHuman() const = 0;
+		
 		/// Use this player to play a side in a game.
 		/// \param game The game to play.
 		/// \param is_black The side to play, \c true for black, \c false for white.
