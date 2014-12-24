@@ -373,6 +373,18 @@ void zebra::Board::move(const Move& mv)
 
 
 
+void zebra::Board::turn(const zebra::Turn& t)
+{
+	this->validate(t);
+	
+	for(zebra::Turn::const_iterator mv = t.begin(); mv != t.end(); ++mv)
+	{
+		this->move( *mv );
+	}
+}
+
+
+
 std::pair<zebra::coord, zebra::coord> zebra::Board::getCoordinates(const square& s) const
 {
 	this->validate(s);
@@ -431,6 +443,32 @@ void zebra::Board::validate(const zebra::Move& mv) const
 	else if( ! is_jump && ! this->jumps(is_black).empty() )
 	{
 		throw std::invalid_argument("Attempt to make a slide when a jump is available");
+	}
+}
+
+
+
+void zebra::Board::validate(const zebra::Turn& t) const
+{
+	zebra::Board temp(*this);
+	
+	square last = t.front().from();
+	
+	for(zebra::Turn::const_iterator mv = t.begin(); mv != t.end(); ++mv)
+	{
+		if( ! temp.king(mv->from()) && temp.king(last) )
+		{
+			throw std::invalid_argument("Attempt to move after king was crowned.");
+		}
+		
+		if( mv->from() != last )
+		{
+			throw std::invalid_argument("Attempt to move multiple pieces in one turn.");
+		}
+		
+		temp.move(*mv);
+		
+		last = mv->to();
 	}
 }
 

@@ -182,12 +182,15 @@ class zebra::Board
 		
 		
 		/// Applies a move to the board.
-		/// \throws std::invalid_argument for all the same reasons Board::validate would.
+		/// \throws std::invalid_argument for all the same reasons Board::validate(const Move&) would.
 		/// If an exception is thrown, the board remains unchanged.
 		void move(const Move& m);
 		
 		
-		//void turn(const Turn& t);
+		/// Applies a sequence of moves to the board.
+		/// \throws std::invalid_argument for all the same reasons Board::validate(const Turn&) would.
+		/// If an exception is thrown, the board remains unchanged.
+		void turn(const Turn& t);
 		
 		
 		//
@@ -217,6 +220,16 @@ class zebra::Board
 		///  * regular piece moving backwards
 		///  * slide when a jump was available
 		void validate(const Move& mv) const;
+		
+		
+		/// Checks a turn to see if it's valid.
+		/// \throws std::invalid_argument for:
+		///  * all the same reasons Board::validate(const Move&) would
+		///  * moves being made by more than one piece
+		///  * a move made after a piece is crowned
+		/// If an exception is thrown, the board remains unchanged.
+		void validate(const Turn& turn) const;
+		
 		
 		/// \throws std::out_of_range If square is outside of the valid range [1,BOARD_SIZE].
 		void validate(const square& s) const;
