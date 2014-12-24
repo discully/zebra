@@ -4,12 +4,15 @@
 #include "Rules.hxx"
 
 #include <iostream>
+#include <vector>
 
 
 
 namespace zebra
 {
 	class Move;
+	
+	typedef std::vector<Move> Turn;
 }
 
 
