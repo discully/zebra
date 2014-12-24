@@ -162,19 +162,19 @@ TEST_F(TestBoard, BitsetsConstructorProducesExpectedBoard)
 // bool black(const square& s) const;
 
 
-TEST_F(TestBoard, BlackSThrowsOutOfRangeIfSquareIsZero)
+TEST_F(TestBoard, BlackSquareThrowsOutOfRangeIfSquareIsZero)
 {
 	ASSERT_THROW( start.black(0), std::out_of_range );
 }
 
 
-TEST_F(TestBoard, BlackSThrowsOutOfRangeIfSquareIsTooLarge)
+TEST_F(TestBoard, BlackSquareThrowsOutOfRangeIfSquareIsTooLarge)
 {
 	ASSERT_THROW( start.black(zebra::Rules::BOARD_SQUARES+1), std::out_of_range );
 }
 
 
-TEST_F(TestBoard, BlackSReturnsTrueForBlackStartingPositions)
+TEST_F(TestBoard, BlackSquareReturnsTrueForBlackStartingPositions)
 {
 	for(zebra::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
 	{
@@ -183,7 +183,7 @@ TEST_F(TestBoard, BlackSReturnsTrueForBlackStartingPositions)
 }
 
 
-TEST_F(TestBoard, BlackSReturnsFalseForEmptyStartingPositions)
+TEST_F(TestBoard, BlackSquareReturnsFalseForEmptyStartingPositions)
 {
 	const zebra::square begin = zebra::Rules::PLAYER_PIECES + 1;
 	const zebra::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
@@ -194,7 +194,7 @@ TEST_F(TestBoard, BlackSReturnsFalseForEmptyStartingPositions)
 }
 
 
-TEST_F(TestBoard, BlackSReturnsFalseForWhiteStartingPositions)
+TEST_F(TestBoard, BlackSquareReturnsFalseForWhiteStartingPositions)
 {
 	zebra::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
 	for(zebra::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
@@ -205,25 +205,124 @@ TEST_F(TestBoard, BlackSReturnsFalseForWhiteStartingPositions)
 
 
 // bool black(const coord& x, const coord& y) const;
-// todo
+
+
+TEST_F(TestBoard, BlackXYThrowsOutOfRangeIfXIsTooLarge)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.black(n, 0), std::out_of_range );
+}
+
+
+TEST_F(TestBoard, BlackXYThrowsOutOfRangeIfYIsTooLarge)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.black(0, n), std::out_of_range );
+}
+
+
+TEST_F(TestBoard, BlackXYThrowsInvalidArgumentIfXYIsNotAPlayableSquare)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.black(0, n-1), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, BlackXYReturnsTrueForBlackStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if( squares > (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) )
+				{
+					ASSERT_TRUE( start.black(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
+
+
+TEST_F(TestBoard, BlackXYReturnsFalseForEmptyStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if(
+					( squares <= (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) )
+					&&
+					( squares > zebra::Rules::PLAYER_PIECES )
+					)
+				{
+					ASSERT_FALSE( start.black(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
+
+
+TEST_F(TestBoard, BlackXYReturnsFalseForWhiteStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if( squares < zebra::Rules::PLAYER_PIECES )
+				{
+					ASSERT_FALSE( start.black(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
 
 
 // bool empty(const square& s) const;
 
 
-TEST_F(TestBoard, EmptyThrowsOutOfRangeIfSquareIsZero)
+TEST_F(TestBoard, EmptySquareThrowsOutOfRangeIfSquareIsZero)
 {
 	ASSERT_THROW( start.empty(0), std::out_of_range );
 }
 
 
-TEST_F(TestBoard, EmptyThrowsOutOfRangeIfSquareIsTooLarge)
+TEST_F(TestBoard, EmptySquareThrowsOutOfRangeIfSquareIsTooLarge)
 {
 	ASSERT_THROW( start.empty(zebra::Rules::BOARD_SQUARES+1), std::out_of_range );
 }
 
 
-TEST_F(TestBoard, EmptyReturnsFalseForBlackStartingPositions)
+TEST_F(TestBoard, EmptySquareReturnsFalseForBlackStartingPositions)
 {
 	for(zebra::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
 	{
@@ -232,7 +331,7 @@ TEST_F(TestBoard, EmptyReturnsFalseForBlackStartingPositions)
 }
 
 
-TEST_F(TestBoard, EmptyReturnsTrueForEmptyStartingPositions)
+TEST_F(TestBoard, EmptySquareReturnsTrueForEmptyStartingPositions)
 {
 	const zebra::square begin = zebra::Rules::PLAYER_PIECES + 1;
 	const zebra::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
@@ -243,7 +342,7 @@ TEST_F(TestBoard, EmptyReturnsTrueForEmptyStartingPositions)
 }
 
 
-TEST_F(TestBoard, EmptyReturnsFalseForWhiteStartingPositions)
+TEST_F(TestBoard, EmptySquareReturnsFalseForWhiteStartingPositions)
 {
 	zebra::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
 	for(zebra::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
@@ -254,25 +353,124 @@ TEST_F(TestBoard, EmptyReturnsFalseForWhiteStartingPositions)
 
 
 // bool empty(const coord& x, const coord& y) const;
-// todo
+
+
+TEST_F(TestBoard, EmptyXYThrowsOutOfRangeIfXIsTooLarge)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.empty(n, 0), std::out_of_range );
+}
+
+
+TEST_F(TestBoard, EmptyXYThrowsOutOfRangeIfYIsTooLarge)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.empty(0, n), std::out_of_range );
+}
+
+
+TEST_F(TestBoard, EmptyXYThrowsInvalidArgumentIfXYIsNotAPlayableSquare)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.empty(0, n-1), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, EmptyXYReturnsFalseForBlackStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if( squares > (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) )
+				{
+					ASSERT_FALSE( start.empty(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
+
+
+TEST_F(TestBoard, EmptyXYReturnsTrueForEmptyStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if(
+					( squares <= (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) )
+					&&
+					( squares > zebra::Rules::PLAYER_PIECES )
+					)
+				{
+					ASSERT_TRUE( start.empty(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
+
+
+TEST_F(TestBoard, EmptyXYReturnsFalseForWhiteStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if( squares < zebra::Rules::PLAYER_PIECES )
+				{
+					ASSERT_FALSE( start.empty(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
 
 
 // bool king(const square& s) const;
 
 
-TEST_F(TestBoard, KingThrowsOutOfRangeIfSquareIsZero)
+TEST_F(TestBoard, KingSquareThrowsOutOfRangeIfSquareIsZero)
 {
 	ASSERT_THROW( start.king(0), std::out_of_range );
 }
 
 
-TEST_F(TestBoard, KingThrowsOutOfRangeIfSquareIsTooLarge)
+TEST_F(TestBoard, KingSquareThrowsOutOfRangeIfSquareIsTooLarge)
 {
 	ASSERT_THROW( start.king(zebra::Rules::BOARD_SQUARES+1), std::out_of_range );
 }
 
 
-TEST_F(TestBoard, KingReturnsFalseForAllStartingPositions)
+TEST_F(TestBoard, KingSquareReturnsFalseForAllStartingPositions)
 {
 	for(zebra::square s = 1; s <= zebra::Rules::BOARD_SQUARES; ++s)
 	{
@@ -282,25 +480,70 @@ TEST_F(TestBoard, KingReturnsFalseForAllStartingPositions)
 
 
 // bool king(const coord& x, const coord& y) const;
-// todo
+
+
+TEST_F(TestBoard, KingXYThrowsOutOfRangeIfXIsTooLarge)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.king(n, 0), std::out_of_range );
+}
+
+
+TEST_F(TestBoard, KingXYThrowsOutOfRangeIfYIsTooLarge)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.king(0, n), std::out_of_range );
+}
+
+
+TEST_F(TestBoard, KingXYThrowsInvalidArgumentIfXYIsNotAPlayableSquare)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.king(0, n-1), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, KingXYReturnsFalseForAllStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if( squares > (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) )
+				{
+					ASSERT_FALSE( start.king(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
 
 
 // bool man(const square& s) const;
 
 
-TEST_F(TestBoard, ManThrowsOutOfRangeIfSquareIsZero)
+TEST_F(TestBoard, ManSquareThrowsOutOfRangeIfSquareIsZero)
 {
 	ASSERT_THROW( start.man(0), std::out_of_range );
 }
 
 
-TEST_F(TestBoard, ManThrowsOutOfRangeIfSquareIsTooLarge)
+TEST_F(TestBoard, ManSquareThrowsOutOfRangeIfSquareIsTooLarge)
 {
 	ASSERT_THROW( start.man(zebra::Rules::BOARD_SQUARES+1), std::out_of_range );
 }
 
 
-TEST_F(TestBoard, ManReturnsTrueForBlackStartingPositions)
+TEST_F(TestBoard, ManSquareReturnsTrueForBlackStartingPositions)
 {
 	for(zebra::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
 	{
@@ -309,7 +552,7 @@ TEST_F(TestBoard, ManReturnsTrueForBlackStartingPositions)
 }
 
 
-TEST_F(TestBoard, ManReturnsFalseForEmptyStartingPositions)
+TEST_F(TestBoard, ManSquareReturnsFalseForEmptyStartingPositions)
 {
 	const zebra::square begin = zebra::Rules::PLAYER_PIECES + 1;
 	const zebra::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
@@ -320,7 +563,7 @@ TEST_F(TestBoard, ManReturnsFalseForEmptyStartingPositions)
 }
 
 
-TEST_F(TestBoard, ManReturnsTrueForWhiteStartingPositions)
+TEST_F(TestBoard, ManSquareReturnsTrueForWhiteStartingPositions)
 {
 	zebra::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
 	for(zebra::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
@@ -331,7 +574,106 @@ TEST_F(TestBoard, ManReturnsTrueForWhiteStartingPositions)
 
 
 // bool man(const coord& x, const coord& y) const;
-// todo
+
+
+TEST_F(TestBoard, ManXYThrowsOutOfRangeIfXIsTooLarge)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.man(n, 0), std::out_of_range );
+}
+
+
+TEST_F(TestBoard, ManXYThrowsOutOfRangeIfYIsTooLarge)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.man(0, n), std::out_of_range );
+}
+
+
+TEST_F(TestBoard, ManXYThrowsInvalidArgumentIfXYIsNotAPlayableSquare)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.man(0, n-1), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, ManXYReturnsTrueForBlackStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if( squares > (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) )
+				{
+					ASSERT_TRUE( start.man(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
+
+
+TEST_F(TestBoard, ManXYReturnsFalseForEmptyStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if(
+					( squares <= (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) )
+					&&
+					( squares > zebra::Rules::PLAYER_PIECES )
+					)
+				{
+					ASSERT_FALSE( start.man(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
+
+
+TEST_F(TestBoard, ManXYReturnsTrueForWhiteStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if( squares < zebra::Rules::PLAYER_PIECES )
+				{
+					ASSERT_TRUE( start.man(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
 
 
 // std::vector<zebra::Move> moves(const bool& is_black) const;
@@ -346,19 +688,19 @@ TEST_F(TestBoard, MovesReturnsSevenMovesAtStart)
 // bool occupied(const square& s) const;
 
 
-TEST_F(TestBoard, OccupiedThrowsOutOfRangeIfSquareIsZero)
+TEST_F(TestBoard, OccupiedSquareThrowsOutOfRangeIfSquareIsZero)
 {
 	ASSERT_THROW( start.occupied(0), std::out_of_range );
 }
 
 
-TEST_F(TestBoard, OccupiedThrowsOutOfRangeIfSquareIsTooLarge)
+TEST_F(TestBoard, OccupiedSquareThrowsOutOfRangeIfSquareIsTooLarge)
 {
 	ASSERT_THROW( start.occupied(zebra::Rules::BOARD_SQUARES+1), std::out_of_range );
 }
 
 
-TEST_F(TestBoard, OccupiedReturnsTrueForBlackStartingPositions)
+TEST_F(TestBoard, OccupiedSquareReturnsTrueForBlackStartingPositions)
 {
 	for(zebra::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
 	{
@@ -367,7 +709,7 @@ TEST_F(TestBoard, OccupiedReturnsTrueForBlackStartingPositions)
 }
 
 
-TEST_F(TestBoard, OccupiedReturnsFalseForEmptyStartingPositions)
+TEST_F(TestBoard, OccupiedSquareReturnsFalseForEmptyStartingPositions)
 {
 	const zebra::square begin = zebra::Rules::PLAYER_PIECES + 1;
 	const zebra::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
@@ -378,7 +720,7 @@ TEST_F(TestBoard, OccupiedReturnsFalseForEmptyStartingPositions)
 }
 
 
-TEST_F(TestBoard, OccupiedReturnsTrueForWhiteStartingPositions)
+TEST_F(TestBoard, OccupiedSquareReturnsTrueForWhiteStartingPositions)
 {
 	zebra::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
 	for(zebra::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
@@ -389,25 +731,124 @@ TEST_F(TestBoard, OccupiedReturnsTrueForWhiteStartingPositions)
 
 
 // bool occupied(const coord& x, const coord& y) const;
-// todo
+
+
+TEST_F(TestBoard, OccupiedXYThrowsOutOfRangeIfXIsTooLarge)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.occupied(n, 0), std::out_of_range );
+}
+
+
+TEST_F(TestBoard, OccupiedXYThrowsOutOfRangeIfYIsTooLarge)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.occupied(0, n), std::out_of_range );
+}
+
+
+TEST_F(TestBoard, OccupiedXYThrowsInvalidArgumentIfXYIsNotAPlayableSquare)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.occupied(0, n-1), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, OccupiedXYReturnsTrueForBlackStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if( squares > (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) )
+				{
+					ASSERT_TRUE( start.occupied(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
+
+
+TEST_F(TestBoard, OccupiedXYReturnsFalseForEmptyStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if(
+					( squares <= (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) )
+					&&
+					( squares > zebra::Rules::PLAYER_PIECES )
+					)
+				{
+					ASSERT_FALSE( start.occupied(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
+
+
+TEST_F(TestBoard, OccupiedXYReturnsTrueForWhiteStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if( squares < zebra::Rules::PLAYER_PIECES )
+				{
+					ASSERT_TRUE( start.occupied(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
 
 
 // bool white(const square& s) const;
 
 
-TEST_F(TestBoard, WhiteThrowsOutOfRangeIfSquareIsZero)
+TEST_F(TestBoard, WhiteSquareThrowsOutOfRangeIfSquareIsZero)
 {
 	ASSERT_THROW( start.white(0), std::out_of_range );
 }
 
 
-TEST_F(TestBoard, WhiteThrowsOutOfRangeIfSquareIsTooLarge)
+TEST_F(TestBoard, WhiteSquareThrowsOutOfRangeIfSquareIsTooLarge)
 {
 	ASSERT_THROW( start.white(zebra::Rules::BOARD_SQUARES+1), std::out_of_range );
 }
 
 
-TEST_F(TestBoard, WhiteReturnsFalseForBlackStartingPositions)
+TEST_F(TestBoard, WhiteSquareReturnsFalseForBlackStartingPositions)
 {
 	for(zebra::square s = 1; s <= zebra::Rules::PLAYER_PIECES; ++s)
 	{
@@ -416,7 +857,7 @@ TEST_F(TestBoard, WhiteReturnsFalseForBlackStartingPositions)
 }
 
 
-TEST_F(TestBoard, WhiteReturnsFalseForEmptyStartingPositions)
+TEST_F(TestBoard, WhiteSquareReturnsFalseForEmptyStartingPositions)
 {
 	const zebra::square begin = zebra::Rules::PLAYER_PIECES + 1;
 	const zebra::square end = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES);
@@ -427,7 +868,7 @@ TEST_F(TestBoard, WhiteReturnsFalseForEmptyStartingPositions)
 }
 
 
-TEST_F(TestBoard, WhiteReturnsTrueForWhiteStartingPositions)
+TEST_F(TestBoard, WhiteSquareReturnsTrueForWhiteStartingPositions)
 {
 	zebra::square begin = (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) + 1;
 	for(zebra::square s = begin; s <= zebra::Rules::BOARD_SQUARES; ++s)
@@ -438,7 +879,106 @@ TEST_F(TestBoard, WhiteReturnsTrueForWhiteStartingPositions)
 
 
 // bool white(const coord& x, const coord& y) const;
-// todo
+
+
+TEST_F(TestBoard, WhiteXYThrowsOutOfRangeIfXIsTooLarge)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.white(n, 0), std::out_of_range );
+}
+
+
+TEST_F(TestBoard, WhiteXYThrowsOutOfRangeIfYIsTooLarge)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.white(0, n), std::out_of_range );
+}
+
+
+TEST_F(TestBoard, WhiteXYThrowsInvalidArgumentIfXYIsNotAPlayableSquare)
+{
+	unsigned int n = zebra::Rules::BOARD_SIZE;
+	ASSERT_THROW( start.white(0, n-1), std::invalid_argument );
+}
+
+
+TEST_F(TestBoard, WhiteXYReturnsFalseForBlackStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if( squares > (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) )
+				{
+					ASSERT_FALSE( start.white(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
+
+
+TEST_F(TestBoard, WhiteXYReturnsFalseForEmptyStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if(
+					( squares <= (zebra::Rules::BOARD_SQUARES - zebra::Rules::PLAYER_PIECES) )
+					&&
+					( squares > zebra::Rules::PLAYER_PIECES )
+					)
+				{
+					ASSERT_FALSE( start.white(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
+
+
+TEST_F(TestBoard, WhiteXYReturnsTrueForWhiteStartingPositions)
+{
+	const unsigned int n = zebra::Rules::BOARD_SIZE;
+	bool playable = false;
+	size_t squares = 0;
+	
+	for(zebra::coord y = 0; y < n; ++y)
+	{
+		for(zebra::coord x = 0; x < n; ++x)
+		{
+			playable = ( x%2 == y%2 );
+			
+			if( playable )
+			{
+				++squares;
+				if( squares < zebra::Rules::PLAYER_PIECES )
+				{
+					ASSERT_TRUE( start.white(x,y) ) << "Failed on (" << x << "," << y << ").";
+				}
+			}
+		}
+	}
+}
 
 
 //
@@ -661,4 +1201,3 @@ TEST_F(TestBoard, GetSquareReturnsExpectedValues)
 		}
 	}
 }
-
