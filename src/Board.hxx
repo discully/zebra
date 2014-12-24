@@ -218,4 +218,8 @@ class zebra::Board
 
 
 
+std::ostream& operator<< (std::ostream& oss, const zebra::Board& b);
+
+
+
 #endif

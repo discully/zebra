@@ -426,3 +426,33 @@ void zebra::Board::validateSquare(const square& s) const
 	}
 }
 
+
+
+std::ostream& operator<< (std::ostream& oss, const zebra::Board& b)
+{
+	for(zebra::square s = 1; s <= zebra::Rules::BOARD_SQUARES; ++s)
+	{
+		if( (s % zebra::Rules::BOARD_ROW) != 1 || (s % zebra::Rules::BOARD_SIZE) == 1 )
+		{
+			// non-playable square before all but the first square on every other row
+			oss << " ";
+		}
+		
+		oss << ( b.empty(s) ? " " : ( b.black(s) ? "B" : "W" ) );
+		
+		if( (s % zebra::Rules::BOARD_ROW) == 0 )
+		{
+			if( (s % zebra::Rules::BOARD_SIZE) == 0 )
+			{
+				// non-playable square at the end of every other row
+				oss << " ";
+			}
+			
+			// after last square on every row
+			oss << "\n";
+		}
+	}
+	
+	return oss;
+}
+

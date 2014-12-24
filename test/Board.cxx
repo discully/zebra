@@ -1201,3 +1201,25 @@ TEST_F(TestBoard, GetSquareReturnsExpectedValues)
 		}
 	}
 }
+
+
+// std::ostream& operator<< (std::ostream& oss, const zebra::Board& b);
+
+
+TEST_F(TestBoard, StreamReturnsExpectedStringForStart)
+{
+	std::ostringstream result_oss;
+	result_oss << start;
+	
+	std::ostringstream expected_oss;
+	expected_oss << " B B B B\n";
+	expected_oss << "B B B B \n";
+	expected_oss << " B B B B\n";
+	expected_oss << "        \n";
+	expected_oss << "        \n";
+	expected_oss << "W W W W \n";
+	expected_oss << " W W W W\n";
+	expected_oss << "W W W W \n";
+	
+	ASSERT_EQ( expected_oss.str(), result_oss.str() );
+}
