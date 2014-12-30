@@ -436,7 +436,7 @@ void zebra::Board::validate(const zebra::Move& mv) const
 	{
 		throw std::invalid_argument("Attempt to jump own piece.");
 	}
-	else if( is_king && ( is_black ? (mv.from() > mv.to()) : (mv.from() < mv.to()) ) )
+	else if( ! is_king && ( is_black ? (mv.from() > mv.to()) : (mv.from() < mv.to()) ) )
 	{
 		throw std::invalid_argument("Attempt to move regular piece backwards.");
 	}
