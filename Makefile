@@ -1,6 +1,17 @@
 CORE_DIRECTORY=src
 TEST_DIRECTORY=test
 
+COMPILER=g++ -g
+
+OPTS=-std=c++11 -pedantic-errors -Wall -Wextra -Werror -Wfatal-errors -Wwrite-strings -Woverloaded-virtual -fno-nonansi-builtins -fno-gnu-keywords -fstrict-aliasing
+
+COMPILE=$(COMPILER) $(CORE_DIRECTORY)/*.o $(OPTS)
+
+
+
+game: core
+	$(COMPILE) $(CORE_DIRECTORY)/zebra.cxx -o zebra.exe
+
 
 core:
 	cd src/ && make

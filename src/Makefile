@@ -5,7 +5,7 @@ OPTS=-std=c++11 -pedantic-errors -Wall -Wextra -Werror -Wfatal-errors -Wwrite-st
 COMPILE=$(COMPILER) $(OPTS)
 
 
-all: Rules Board Move
+all: Board Game Human Move Player Rules Random
 
 
 Board: Rules Move
@@ -16,11 +16,19 @@ Game: Board Move Player
 	$(COMPILE) $@.cxx
 
 
+Human: Player
+	$(COMPILE) $@.cxx
+
+
 Move: Rules
 	$(COMPILE) $@.cxx
 
 
 Player: Move
+	$(COMPILE) $@.cxx
+
+
+Random: Player
 	$(COMPILE) $@.cxx
 
 
