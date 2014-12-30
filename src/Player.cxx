@@ -5,21 +5,21 @@
 
 
 zebra::Player::Player()
-	: g(nullptr), is_black(false), id("")
+	: g(nullptr), id(""), is_black(false)
 {}
 
 
 
 zebra::Player::Player(const zebra::Player& p)
-	: g(nullptr), is_black(p.is_black), id("")
+	: g(nullptr), id(""), is_black(p.is_black)
 {}
 
 
 
 zebra::Player& zebra::Player::operator= (const zebra::Player& p)
 {
-	this->is_black = p.is_black;
 	this->id = p.id;
+	this->is_black = p.is_black;
 	return *this;
 }
 
