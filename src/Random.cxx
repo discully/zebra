@@ -4,6 +4,8 @@
 #include "Game.hxx"
 #include "Move.hxx"
 
+#include <sstream>
+
 
 
 zebra::Random::Random()
