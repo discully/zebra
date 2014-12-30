@@ -494,7 +494,19 @@ std::ostream& operator<< (std::ostream& oss, const zebra::Board& b)
 			oss << "| ";
 		}
 		
-		oss << ( b.empty(s) ? "| " : ( b.black(s) ? "|B" : "|W" ) );
+		oss << "|";
+		if( b.empty(s) )
+		{
+			oss << " ";
+		}
+		else if( b.black(s) )
+		{
+			oss << ( b.king(s)  ? "B" : "b" );
+		}
+		else
+		{
+			oss << ( b.king(s)  ? "W" : "w" );
+		}
 		
 		if( (s % zebra::Rules::BOARD_ROW) == 0 )
 		{
