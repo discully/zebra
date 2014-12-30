@@ -22,6 +22,9 @@ class zebra::Human : public zebra::Player
 		/// \returns \c true
 		virtual bool onlyHuman() const;
 		
+		/// Ask the player for their name
+		virtual void startGame();
+		
 		/// Request the player's next turn from the console.
 		/// \returns An in-order series of moves which make up the player's turn.
 		/// \throws std::runtime_error If the player is not currently attached to a game.

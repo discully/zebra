@@ -5,13 +5,13 @@
 
 
 zebra::Player::Player()
-	: g(nullptr), is_black(false)
+	: g(nullptr), is_black(false), id("")
 {}
 
 
 
 zebra::Player::Player(const zebra::Player& p)
-	: g(nullptr), is_black(p.is_black)
+	: g(nullptr), is_black(p.is_black), id("")
 {}
 
 
@@ -19,6 +19,7 @@ zebra::Player::Player(const zebra::Player& p)
 zebra::Player& zebra::Player::operator= (const zebra::Player& p)
 {
 	this->is_black = p.is_black;
+	this->id = p.id;
 	return *this;
 }
 
@@ -42,6 +43,13 @@ void zebra::Player::play(const zebra::Game *const game, const bool is_playing_bl
 void zebra::Player::finishGame()
 {
 	return;
+}
+
+
+
+std::string zebra::Player::name() const
+{
+	return this->id;
 }
 
 

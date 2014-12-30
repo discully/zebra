@@ -10,7 +10,11 @@ zebra::Random::Random()
 	: zebra::Player(),
 	r_generator( std::random_device()() ),
 	r(0,1024)
-{}
+{
+	std::ostringstream oss;
+	oss << "Random Zebra " << this->r(this->r_generator);
+	this->id = oss.str();
+}
 
 
 

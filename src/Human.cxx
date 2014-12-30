@@ -19,6 +19,14 @@ bool zebra::Human::onlyHuman() const
 
 
 
+void zebra::Human::startGame()
+{
+	std::cout << ( this->is_black ? "Black" : "White" ) << ": Enter player's name ";
+	std::cin >> this->id;
+}
+
+
+
 std::vector<zebra::Move> zebra::Human::turn()
 {
 	std::vector<Move> result;

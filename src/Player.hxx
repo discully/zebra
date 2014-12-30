@@ -54,6 +54,11 @@ class zebra::Player
 		/// finalising actions it wants to.
 		virtual void finishGame();
 		
+		
+		/// Get the player's name.
+		/// \returns The name by which the player is known.
+		std::string name() const;
+		
 		/// Will be called by the game when the player is attached to it.
 		/// A derived class can optionally implement it to perform any
 		/// initialising actions it wants to.
@@ -63,6 +68,9 @@ class zebra::Player
 		
 		/// The game currently being played.
 		const Game* g;
+		
+		/// The player's name
+		std::string id;
 		
 		/// The side this player is currently representing.
 		/// \c true for black, \c false for white.
