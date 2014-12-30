@@ -23,11 +23,13 @@ class zebra::Game
 		/// \param logging \c true (default) to enable logging, \c false to disable logging.
 		explicit Game(bool logging = true);
 		
+		
 		/// Constructs a new game with specified players
 		/// \param black_player Pointer to an instance of a player to be black.
 		/// \param white_player Pointer to an instance of a player to be white.
 		/// \param logging \c true (default) to enable logging, \c false to disable logging.
 		Game(Player* black_player, Player* white_player, bool logging = true);
+		
 		
 		/// Copy-constructor copies the state of a game but not the actual
 		/// players (the state of the board and knowledge who's turn it is
@@ -36,6 +38,7 @@ class zebra::Game
 		
 		
 		virtual ~Game();
+		
 		
 		/// The game board.
 		/// \returns A reference to the game's board.
@@ -54,9 +57,22 @@ class zebra::Game
 		bool logging() const;
 		
 		
+		void play();
+		
+		
+		/// Set the players of this game.
+		void players(Player* black_player, Player* white_player);
+		
+		
 	private:
-	
+		
+		bool end() const;
+		
 		void logTurn(const std::vector<Move>& turn);
+		
+		void playTurn();
+		
+		void playerTurn(zebra::Player* player);
 		
 		/// The game's board.
 		Board state;
