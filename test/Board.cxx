@@ -30,12 +30,85 @@ class TestBoard : public ::testing::Test
 				std::bitset<zebra::Rules::BOARD_SQUARES>("00001111000011110000000000000000"),
 				std::bitset<zebra::Rules::BOARD_SQUARES>("00001111000011111111000011110000")
 				);
+			
+			single_black_king = zebra::Board(
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000001000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000001000000000000000000")
+				);
+				
+			single_white_king = zebra::Board(
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000001000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000001000000000000000000")
+				);
+			
+			single_black_man = zebra::Board(
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000001000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000000000000000000")
+				);
+				
+			single_white_man = zebra::Board(
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000001000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000000000000000000")
+				);
+			
+			// two regular pieces in a position to take each other
+			two_men = zebra::Board(
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000100000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000001000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000000000000000000")
+				);
+			
+			// two regular pieces with their backs to each other
+			two_men_backwards = zebra::Board(
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000001000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000100000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000000000000000000")
+				);
+			
+			// two kings with their backs to each other
+			two_kings_backwards = zebra::Board(
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000001000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000100000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000001000100000000000000")
+				);
+			
+			// black man at 13, which can't take white man at 16
+			ote_man = 13;
+			over_the_edge_man = zebra::Board(
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000001000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000001000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000000000000000000000000")
+				);
+			
+			// white king at 20, which can't take black men at 17 or 25
+			ote_king = 20;
+			over_the_edge_king = zebra::Board(
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000001000000010000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000010000000000000000000"),
+				std::bitset<zebra::Rules::BOARD_SQUARES>("00000000000010000000000000000000")
+				);
 		}
 		
 		zebra::Board start;
 		zebra::Board rows;
 		zebra::Board attack;
 		zebra::Board royal_attack;
+		zebra::Board single_black_king;
+		zebra::Board single_white_king;
+		zebra::Board single_black_man;
+		zebra::Board single_white_man;
+		zebra::Board two_men;
+		zebra::Board two_men_backwards;
+		zebra::Board two_kings_backwards;
+		zebra::Board over_the_edge_man;
+		zebra::Board over_the_edge_king;
+		
+		zebra::square ote_man;
+		zebra::square ote_king;
 };
 
 
@@ -455,6 +528,85 @@ TEST_F(TestBoard, EmptyXYReturnsFalseForWhiteStartingPositions)
 }
 
 
+// std::vector<zebra::Move> jumps(const bool& is_black) const;
+
+
+TEST_F(TestBoard, JumpsBoolIsEmptyForSingleBlackKing)
+{
+	ASSERT_TRUE( single_black_king.jumps(true).empty() );
+}
+
+
+TEST_F(TestBoard, JumpsBoolIsEmptyForSingleWhiteKing)
+{
+	ASSERT_TRUE( single_white_king.jumps(false).empty() );
+}
+
+
+TEST_F(TestBoard, JumpsBoolIsEmptyForSingleBlackMan)
+{
+	ASSERT_TRUE( single_black_man.jumps(true).empty() );
+}
+
+
+TEST_F(TestBoard, JumpsBoolIsEmptyForSingleWhiteMan)
+{
+	ASSERT_TRUE( single_white_man.jumps(false).empty() );
+}
+
+
+TEST_F(TestBoard, JumpsBoolBlackHasOneEntryForTwoMen)
+{
+	ASSERT_EQ( 1, two_men.jumps(true).size() );
+}
+
+
+TEST_F(TestBoard, JumpsBoolWhiteHasOneEntryForTwoMen)
+{
+	ASSERT_EQ( 1, two_men.jumps(false).size() );
+}
+
+
+TEST_F(TestBoard, JumpsBoolBlackIsEmptyForTwoMenBackwards)
+{
+	ASSERT_TRUE( two_men_backwards.jumps(true).empty() );
+}
+
+
+TEST_F(TestBoard, JumpsBoolWhiteIsEmptyForTwoMenBackwards)
+{
+	ASSERT_TRUE( two_men_backwards.jumps(false).empty() );
+}
+
+
+TEST_F(TestBoard, JumpsBoolBlackHasOneEntryForTwoKingsBackwards)
+{
+	ASSERT_EQ( 1, two_kings_backwards.jumps(true).size() );
+}
+
+
+TEST_F(TestBoard, JumpsBoolWhiteHasOneEntryForTwoKingsBackwards)
+{
+	ASSERT_EQ( 1, two_kings_backwards.jumps(false).size() );
+}
+
+
+TEST_F(TestBoard, JumpsBoolBlackReturnsNoMovesForOverTheEdgeMan)
+{
+	ASSERT_EQ( 0, over_the_edge_man.jumps(true).size() );
+}
+
+
+TEST_F(TestBoard, JumpsBoolWhiteReturnsNoMovesForOverTheEdgeMan)
+{
+	ASSERT_EQ( 0, over_the_edge_man.jumps(false).size() );
+}
+
+
+// std::vector<zebra::Move> jumps(const square& from) const;
+// todo
+
+
 // bool king(const square& s) const;
 
 
@@ -679,10 +831,21 @@ TEST_F(TestBoard, ManXYReturnsTrueForWhiteStartingPositions)
 // std::vector<zebra::Move> moves(const bool& is_black) const;
 
 
-TEST_F(TestBoard, MovesReturnsSevenMovesAtStart)
+TEST_F(TestBoard, MovesBoolReturnsSevenSlideMovesAtStart)
 {
-	ASSERT_EQ( 7, start.moves(true).size() );
+	std::vector<zebra::Move> moves = start.moves(true);
+	
+	ASSERT_EQ( 7, moves.size() ) << "Incorrect number of moves";
+	
+	for(std::vector<zebra::Move>::const_iterator mv = moves.begin(); mv != moves.end(); ++mv)
+	{
+		ASSERT_TRUE( mv->slide() ) << "Non-slide move encountered";
+	}
 }
+
+
+// std::vector<zebra::Move> moves(const square& from) const;
+// todo
 
 
 // bool occupied(const square& s) const;
@@ -831,6 +994,73 @@ TEST_F(TestBoard, OccupiedXYReturnsTrueForWhiteStartingPositions)
 		}
 	}
 }
+
+
+// std::vector<zebra::Move> slides(const bool& is_black) const;
+
+
+TEST_F(TestBoard, SlidesBoolReturnsFourMovesForSingleBlackKing)
+{
+	ASSERT_EQ( 4, single_black_king.slides(true).size() );
+}
+
+
+TEST_F(TestBoard, SlidesBoolReturnsFourMovesForSingleWhiteKing)
+{
+	ASSERT_EQ( 4, single_white_king.slides(false).size() );
+}
+
+
+TEST_F(TestBoard, SlidesBoolReturnsTwoMovesForSingleBlackMan)
+{
+	ASSERT_EQ( 2, single_black_man.slides(true).size() );
+}
+
+
+TEST_F(TestBoard, SlidesBoolReturnsTwoMovesForSingleWhiteMan)
+{
+	ASSERT_EQ( 2, single_white_man.slides(false).size() );
+}
+
+
+TEST_F(TestBoard, SlidesBoolBlackReturnsOneMoveForTwoMen)
+{
+	ASSERT_EQ( 1, two_men.slides(true).size() );
+}
+
+
+TEST_F(TestBoard, SlidesBoolWhiteReturnsOneMoveForTwoMen)
+{
+	ASSERT_EQ( 1, two_men.slides(false).size() );
+}
+
+
+TEST_F(TestBoard, SlidesBoolBlackReturnsTwoMovesForTwoMenBackwards)
+{
+	ASSERT_EQ( 2, two_men_backwards.slides(true).size() );
+}
+
+
+TEST_F(TestBoard, SlidesBoolWhiteReturnsTwoMovesForTwoMenBackwards)
+{
+	ASSERT_EQ( 2, two_men_backwards.slides(false).size() );
+}
+
+
+TEST_F(TestBoard, SlidesBoolBlackReturnsThreeMovesForTwoKingsBackwards)
+{
+	ASSERT_EQ( 3, two_kings_backwards.slides(true).size() );
+}
+
+
+TEST_F(TestBoard, SlidesBoolWhiteReturnsThreeMovesForTwoKingsBackwards)
+{
+	ASSERT_EQ( 3, two_kings_backwards.slides(false).size() );
+}
+
+
+// std::vector<zebra::Move> slides(const square& from) const;
+// todo
 
 
 // bool white(const square& s) const;
