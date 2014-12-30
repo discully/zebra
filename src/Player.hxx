@@ -42,14 +42,12 @@ class zebra::Player
 		/// Use this player to play a side in a game.
 		/// \param game The game to play.
 		/// \param is_black The side to play, \c true for black, \c false for white.
-		void play(const Game *const game, const bool is_black);
+		void play(const Game *const game, const bool is_playing_black);
 		
 		/// Request the player's next turn in the game.
 		/// \returns An in-order series of moves which make up the player's turn.
 		/// \throws std::runtime_error If the player is not currently attached to a game.
 		virtual std::vector<Move> turn() = 0;
-	
-	protected:
 		
 		/// Will be called when the game when the game ends.
 		/// A derived class can optionally implement it to perform any
@@ -60,13 +58,15 @@ class zebra::Player
 		/// A derived class can optionally implement it to perform any
 		/// initialising actions it wants to.
 		virtual void startGame();
+	
+	protected:
 		
 		/// The game currently being played.
 		const Game* g;
 		
 		/// The side this player is currently representing.
 		/// \c true for black, \c false for white.
-		bool side;
+		bool is_black;
 };
 
 
