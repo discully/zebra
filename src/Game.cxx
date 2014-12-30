@@ -99,7 +99,7 @@ std::vector< std::vector<zebra::Move> > zebra::Game::log() const
 
 bool zebra::Game::logging() const
 {
-	return (this->history == nullptr);
+	return ! (this->history == nullptr);
 }
 
 
