@@ -491,17 +491,17 @@ std::ostream& operator<< (std::ostream& oss, const zebra::Board& b)
 		if( (s % zebra::Rules::BOARD_ROW) != 1 || (s % zebra::Rules::BOARD_SIZE) == 1 )
 		{
 			// non-playable square before all but the first square on every other row
-			oss << " ";
+			oss << "| ";
 		}
 		
-		oss << ( b.empty(s) ? " " : ( b.black(s) ? "B" : "W" ) );
+		oss << ( b.empty(s) ? "| " : ( b.black(s) ? "|B" : "|W" ) );
 		
 		if( (s % zebra::Rules::BOARD_ROW) == 0 )
 		{
 			if( (s % zebra::Rules::BOARD_SIZE) == 0 )
 			{
 				// non-playable square at the end of every other row
-				oss << " ";
+				oss << "| ";
 			}
 			
 			// after last square on every row

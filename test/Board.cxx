@@ -1446,14 +1446,14 @@ TEST_F(TestBoard, StreamReturnsExpectedStringForStart)
 	result_oss << start;
 	
 	std::ostringstream expected_oss;
-	expected_oss << " B B B B\n";
-	expected_oss << "B B B B \n";
-	expected_oss << " B B B B\n";
-	expected_oss << "        \n";
-	expected_oss << "        \n";
-	expected_oss << "W W W W \n";
-	expected_oss << " W W W W\n";
-	expected_oss << "W W W W \n";
+	expected_oss << "| |B| |B| |B| |B\n";
+	expected_oss << "|B| |B| |B| |B| \n";
+	expected_oss << "| |B| |B| |B| |B\n";
+	expected_oss << "| | | | | | | | \n";
+	expected_oss << "| | | | | | | | \n";
+	expected_oss << "|W| |W| |W| |W| \n";
+	expected_oss << "| |W| |W| |W| |W\n";
+	expected_oss << "|W| |W| |W| |W| \n";
 	
 	ASSERT_EQ( expected_oss.str(), result_oss.str() );
 }
