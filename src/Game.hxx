@@ -40,9 +40,17 @@ class zebra::Game
 		virtual ~Game();
 		
 		
+		const Player* blackPlayer() const;
+		
+		
 		/// The game board.
 		/// \returns A reference to the game's board.
 		const Board& board() const;
+		
+		
+		/// Determine if the game is over.
+		/// \returns \c true if the game is over, or false otherwise.
+		bool end() const;
 		
 		
 		/// Gets a copy of the log of moves.
@@ -64,9 +72,15 @@ class zebra::Game
 		void players(Player* black_player, Player* white_player);
 		
 		
-	private:
+		const Player* whitePlayer() const;
 		
-		bool end() const;
+		
+		/// Get the winning player.
+		/// \returns A pointer to the winning player if the game is over and ended in a win, or \c nullptr otherwise.
+		const Player* winner() const;
+		
+		
+	private:
 		
 		void logTurn(const std::vector<Move>& turn);
 		
@@ -90,6 +104,10 @@ class zebra::Game
 		std::vector< std::vector<Move> >* history;
 		
 };
+
+
+
+std::ostream& operator<< (std::ostream& oss, const zebra::Game& g);
 
 
 

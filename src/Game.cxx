@@ -62,9 +62,23 @@ zebra::Game::~Game()
 
 
 
+const zebra::Player* zebra::Game::blackPlayer() const
+{
+	return this->black;
+}
+
+
+
 const zebra::Board& zebra::Game::board() const
 {
 	return this->state;
+}
+
+
+
+bool zebra::Game::end() const
+{
+	return ! (this->winner() == nullptr);
 }
 
 
@@ -133,33 +147,51 @@ void zebra::Game::players(zebra::Player* black_player, zebra::Player* white_play
 
 
 
-//
-// Private
-//
-
-
-
-bool zebra::Game::end() const
+const zebra::Player* zebra::Game::whitePlayer() const
 {
-	bool black = false;
-	bool white = false;
+	return this->white;
+}
+
+
+
+const zebra::Player* zebra::Game::winner() const
+{
+	bool black_has_pieces = false;
+	bool white_has_pieces = false;
 	
 	for(square s = 1; s <= Rules::BOARD_SQUARES; ++s)
 	{
-		if( ! black && this->state.black(s) )
+		if( ! black_has_pieces && this->state.black(s) )
 		{
-			black = true;
+			black_has_pieces = true;
 		}
-		else if( ! white && this->state.white(s) )
+		else if( ! white_has_pieces && this->state.white(s) )
 		{
-			white = true;
+			white_has_pieces = true;
 		}
 		
-		if( black && white ) break;
+		if( black_has_pieces && white_has_pieces ) break;
 	}
 	
-	return ( ! black || ! white );
+	if( black_has_pieces && white_has_pieces )
+	{
+		return nullptr;
+	}
+	else if( black_has_pieces )
+	{
+		return this->black;
+	}
+	else
+	{
+		return this->white;
+	}
 }
+
+
+
+//
+// Private
+//
 
 
 
@@ -213,6 +245,46 @@ void zebra::Game::playerTurn(zebra::Player* player)
 	if( this->logging() ) this->logTurn( turn );
 
 	this->next = ( *(this->next) == this->black ) ? &(this->white) : &(this->black);
+}
+
+
+
+//
+// Other
+//
+
+
+
+std::ostream& operator<< (std::ostream& oss, const zebra::Game& g)
+{
+	bool game_over = g.end();
+	bool black_wins = game_over && (g.winner() == g.blackPlayer());
+	
+	oss << "[Black \"" << g.blackPlayer()->name() << "\"]\n";
+	oss << "[White \"" << g.whitePlayer()->name() << "\"]\n";
+	oss << "[Result \"" << ( game_over ? ( black_wins ? "0-1" : "1-0" ) : "*" ) << "\"]\n";
+	
+	std::vector< std::vector<zebra::Move> > turns = g.log();
+	unsigned int i = 0;
+	for(std::vector< std::vector<zebra::Move> >::const_iterator turn = turns.begin(); turn != turns.end(); ++turn)
+	{
+		if( i % 2 == 0 )
+		{
+			std::cout << ((i/2)+1) << ". ";
+		}
+		++i;
+		
+		for(std::vector<zebra::Move>::const_iterator move = turn->begin(); move != turn->end(); ++move)
+		{
+			oss << *move << " ";
+		}
+	}
+	
+	if( game_over ) oss << (black_wins ? "BW" : "WW");
+	
+	oss << "\n";
+	
+	return oss;
 }
 
 
