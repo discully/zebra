@@ -136,12 +136,12 @@ void zebra::Game::players(zebra::Player* black_player, zebra::Player* white_play
 	
 	if( this->white != nullptr && this->white->game() == this )
 	{
-		this->white->play(nullptr, true);
+		this->white->play(nullptr, false);
 	}
 	this->white = white_player;
 	if( this->white != nullptr )
 	{
-		this->white->play( this, true );
+		this->white->play( this, false );
 	}
 }
 
@@ -229,16 +229,16 @@ void zebra::Game::playTurn()
 
 void zebra::Game::playerTurn(zebra::Player* player)
 {
-	std::cout << "\n\n" << this->board() << "\n\n";
+	//std::cout << "\n\n" << this->board() << "\n\n";
 	
 	zebra::Turn turn = player->turn();
 	
-	std::cout << ( (player == this->black) ? "Black" : "White" ) << ": ";
-	for(zebra::Turn::const_iterator mv = turn.begin(); mv != turn.end(); ++mv)
-	{
-		std::cout << *mv << " ";
-	}
-	std::cout << std::endl;
+	//std::cout << ( (player == this->black) ? "Black" : "White" ) << ": ";
+	//for(zebra::Turn::const_iterator mv = turn.begin(); mv != turn.end(); ++mv)
+	//{
+	//	std::cout << *mv << " ";
+	//}
+	//std::cout << std::endl;
 	
 	this->state.turn(turn);
 	

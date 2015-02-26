@@ -10,7 +10,7 @@ COMPILE=$(COMPILER) $(CORE_DIRECTORY)/*.o $(OPTS)
 
 
 game: core
-	$(COMPILE) $(CORE_DIRECTORY)/zebra.cxx -o zebra.exe
+	$(COMPILE) $(CORE_DIRECTORY)/main.cxx -o zebra.exe
 
 
 core:
