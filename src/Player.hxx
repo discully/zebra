@@ -27,6 +27,9 @@ class zebra::Player
 		/// exception of the current game, which is initialised to \c nullptr.
 		Player(const Player& p);
 		
+		/// Destructor
+		virtual ~Player() {}
+		
 		/// Copy-assignment copies every aspect of the player with the
 		/// exception of the current game, which is left unchanged.
 		Player& operator= (const Player& p);
